@@ -1,15 +1,238 @@
 <template>
   <div class="login">
-    登录页面
+    <!-- 头部logo -->
+    <header>
+      <div class="logo">
+        <img src="../assets/images/logo.jpg" alt />
+      </div>
+    </header>
+    <!-- 选项卡部分 -->
+    <van-tabs color="#409eff" :animated="true" title-active-color="#409eff" ref="changetab">
+      <van-tab title="普通登录" >
+          <div class="form-container">
+            <van-field v-model="loginData.username" clearable placeholder="您的邮箱/手机号" />
+            <van-field v-model="loginData.password" type="password" placeholder="您的密码" />
+          </div>
+        <div class="btns">
+          <van-button type="primary" size="large" @click="login">登录</van-button>
+          <van-button type="primary" size="large" class="wait-btn" @click="changetab('reg')">快速注册</van-button>
+        </div>
+      </van-tab>
+      <van-tab title="快速注册">
+          <div class="form-container">
+            <van-field v-model="regData.username" clearable placeholder="您的邮箱/手机号" />
+
+            <van-field v-model="regData.captcha" center clearable placeholder="请输入短信验证码">
+              <van-button
+                slot="button"
+                size="small"
+                type="primary"
+                class="yzm"
+                @click="getCode"
+              >发送验证码</van-button>
+            </van-field>
+
+            <van-field v-model="regData.password" type="password" placeholder="您的密码" />
+            <van-field v-model="regData.nickname" clearable placeholder="您的昵称" />
+          </div>
+        <div class="btns">
+          <van-button type="primary" size="large" @click="reg">快速注册</van-button>
+          <van-button type="primary" size="large" class="wait-btn" @click="changetab('login')">登录</van-button>
+        </div>
+      </van-tab>
+    </van-tabs>
+
+    <!-- 底部第三方登录 -->
+    <footer>
+      <van-divider>使用第三方账号登录</van-divider>
+      <div class="footer-content">
+        <div class="wb">
+          <img src="../assets/images/wb.png" alt />
+          新浪微博
+        </div>
+        <div class="qq">
+          <img src="../assets/images/qq.png" alt />
+          QQ登录
+        </div>
+      </div>
+    </footer>
   </div>
 </template>
 
 <script>
+import { getCode, register, login } from '@/api/login'
+import { setLocal } from '@/utils/utils'
 export default {
-  name: 'login'
+  name: 'login',
+  data () {
+    return {
+      loginData: {
+        username: '17611111111',
+        password: '111111'
+      },
+      regData: {
+        username: '17611111111',
+        password: '111111',
+        nickname: '松野君',
+        captcha: '000000'
+      }
+    }
+  },
+  methods: {
+    getCode () {
+      let data = {
+        tel: this.regData.username
+      }
+      getCode(data).then(res => {
+        console.log(res)
+        this.$notify({
+          message: `您的验证码是${res.data.code}`,
+          duration: 2000,
+          background: '#409eff'
+        })
+      }).catch((err) => {
+        throw err
+      })
+    },
+    reg () {
+      register(this.regData).then(res => {
+        if (res.status === 200) {
+          localStorage.setItem('xy-info', res.data)
+          this.$notify({
+            message: `注册成功，2s后跳转登录页面`,
+            duration: 2000,
+            background: '#409eff'
+          })
+          setTimeout(() => {
+            this.changetab('login')
+          }, 1500)
+        }
+        console.log(111)
+      }).catch(err => {
+        this.$notify({
+          message: err.response.data.message,
+          duration: 2000,
+          background: '#dc2727'
+        })
+      })
+    },
+    login () {
+      login(this.loginData).then(res => {
+        setLocal('userInfo', res.data.user)
+        setLocal('userToken', res.data.token)
+        this.$notify({
+          message: `欢迎您${res.data.user.nickname},1s后将跳转首页`,
+          duration: 2000,
+          background: '#409eff'
+        })
+        setTimeout(() => {
+          this.$router.push({ name: 'home' })
+        }, 1000)
+      }).catch(err => {
+        console.dir(err)
+        // this.$notify({
+        //   message: err.response.data.message,
+        //   duration: 2000,
+        //   background: '#dc2727'
+        // })
+      })
+    },
+    changetab (dom) {
+      let ele = this.$refs.changetab.$el.children[0].children[0].children
+      if (dom === 'login') {
+        ele[0].click()
+      } else {
+        ele[1].click()
+      }
+    }
+  },
+  mouted () {
+
+  }
 }
 </script>
-
-<style>
-
+<style lang="less" scoped>
+@xy-color: #409eff;
+.login {
+  padding: 0 10px;
+  header {
+    .logo {
+      height: 70px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      > img {
+        height: 40px;
+      }
+    }
+  }
+  /deep/.van-tabs__line {
+    width: 50% !important;
+    height: 3px !important;
+    top: -3px;
+  }
+  /deep/.van-tabs__nav.van-tabs__nav--line {
+    border-top: 4px solid #ccc !important;
+  }
+  .form-container {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin: 20px 0;
+    overflow: hidden;
+  }
+  /deep/.van-cell.van-field {
+    border-bottom: 1px solid #ccc;
+    &:last-child {
+      border-bottom: none;
+    }
+    .yzm {
+      background-color: @xy-color;
+      border-radius: 3px;
+      border-color: @xy-color;
+    }
+  }
+  .btns {
+    .van-button {
+      height: 40px;
+      line-height: 40px;
+      border-radius: 5px;
+      background-color: @xy-color;
+      border-color: @xy-color;
+      margin-bottom: 15px;
+      &.wait-btn {
+        background-color: #fff;
+        color: @xy-color;
+      }
+    }
+  }
+  footer {
+    /deep/.van-divider {
+      font-size: 12px;
+      color: #bbb;
+    }
+    /deep/.van-divider::before,
+    .van-divider::after {
+      border-color: #bbb;
+    }
+    .footer-content {
+      display: flex;
+      justify-content: space-between;
+      > div {
+        width: 156px;
+        height: 78px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 14px;
+        text-align: center;
+        color: #666;
+      }
+      img {
+        display: block;
+        width: 40px;
+        height: 40px;
+        margin: 10px auto 4px;
+      }
+    }
+  }
+}
 </style>
