@@ -8,33 +8,27 @@
     </header>
     <!-- 选项卡部分 -->
     <van-tabs color="#409eff" :animated="true" title-active-color="#409eff" ref="changetab">
-      <van-tab title="普通登录" >
-          <div class="form-container">
-            <van-field v-model="loginData.username" clearable placeholder="您的邮箱/手机号" />
-            <van-field v-model="loginData.password" type="password" placeholder="您的密码" />
-          </div>
+      <van-tab title="普通登录">
+        <div class="form-container">
+          <van-field v-model="loginData.username" clearable placeholder="您的邮箱/手机号" />
+          <van-field v-model="loginData.password" type="password" placeholder="您的密码" />
+        </div>
         <div class="btns">
           <van-button type="primary" size="large" @click="login">登录</van-button>
           <van-button type="primary" size="large" class="wait-btn" @click="changetab('reg')">快速注册</van-button>
         </div>
       </van-tab>
       <van-tab title="快速注册">
-          <div class="form-container">
-            <van-field v-model="regData.username" clearable placeholder="您的邮箱/手机号" />
+        <div class="form-container">
+          <van-field v-model="regData.username" clearable placeholder="您的邮箱/手机号" />
 
-            <van-field v-model="regData.captcha" center clearable placeholder="请输入短信验证码">
-              <van-button
-                slot="button"
-                size="small"
-                type="primary"
-                class="yzm"
-                @click="getCode"
-              >发送验证码</van-button>
-            </van-field>
+          <van-field v-model="regData.captcha" center clearable placeholder="请输入短信验证码">
+            <van-button slot="button" size="small" type="primary" class="yzm" @click="getCode">发送验证码</van-button>
+          </van-field>
 
-            <van-field v-model="regData.password" type="password" placeholder="您的密码" />
-            <van-field v-model="regData.nickname" clearable placeholder="您的昵称" />
-          </div>
+          <van-field v-model="regData.password" type="password" placeholder="您的密码" />
+          <van-field v-model="regData.nickname" clearable placeholder="您的昵称" />
+        </div>
         <div class="btns">
           <van-button type="primary" size="large" @click="reg">快速注册</van-button>
           <van-button type="primary" size="large" class="wait-btn" @click="changetab('login')">登录</van-button>
@@ -83,59 +77,65 @@ export default {
       let data = {
         tel: this.regData.username
       }
-      getCode(data).then(res => {
-        console.log(res)
-        this.$notify({
-          message: `您的验证码是${res.data.code}`,
-          duration: 2000,
-          background: '#409eff'
+      getCode(data)
+        .then(res => {
+          console.log(res)
+          this.$notify({
+            message: `您的验证码是${res.data.code}`,
+            duration: 2000,
+            background: '#409eff'
+          })
         })
-      }).catch((err) => {
-        throw err
-      })
+        .catch(err => {
+          throw err
+        })
     },
     reg () {
-      register(this.regData).then(res => {
-        if (res.status === 200) {
-          localStorage.setItem('xy-info', res.data)
+      register(this.regData)
+        .then(res => {
+          if (res.status === 200) {
+            localStorage.setItem('xy-info', res.data)
+            this.$notify({
+              message: `注册成功，2s后跳转登录页面`,
+              duration: 2000,
+              background: '#409eff'
+            })
+            setTimeout(() => {
+              this.changetab('login')
+            }, 1500)
+          }
+          console.log(111)
+        })
+        .catch(err => {
           this.$notify({
-            message: `注册成功，2s后跳转登录页面`,
+            message: err.response.data.message,
+            duration: 2000,
+            background: '#dc2727'
+          })
+        })
+    },
+    login () {
+      login(this.loginData)
+        .then(res => {
+          setLocal('userInfo', res.data.user)
+          setLocal('userToken', res.data.token)
+          this.$notify({
+            message: `欢迎您${res.data.user.nickname},1s后将跳转首页`,
             duration: 2000,
             background: '#409eff'
           })
           setTimeout(() => {
-            this.changetab('login')
-          }, 1500)
-        }
-        console.log(111)
-      }).catch(err => {
-        this.$notify({
-          message: err.response.data.message,
-          duration: 2000,
-          background: '#dc2727'
+            this.$router.push({ name: 'home' })
+          }, 1000)
         })
-      })
-    },
-    login () {
-      login(this.loginData).then(res => {
-        setLocal('userInfo', res.data.user)
-        setLocal('userToken', res.data.token)
-        this.$notify({
-          message: `欢迎您${res.data.user.nickname},1s后将跳转首页`,
-          duration: 2000,
-          background: '#409eff'
+        .catch(err => {
+          console.dir(err)
+          // this.$notify({
+          //   message: err.response.data.message,
+          //   duration: 2000,
+          //   background: '#dc2727'
+          // })
         })
-        setTimeout(() => {
-          this.$router.push({ name: 'home' })
-        }, 1000)
-      }).catch(err => {
-        console.dir(err)
-        // this.$notify({
-        //   message: err.response.data.message,
-        //   duration: 2000,
-        //   background: '#dc2727'
-        // })
-      })
     },
     changetab (dom) {
       let ele = this.$refs.changetab.$el.children[0].children[0].children
@@ -146,9 +146,7 @@ export default {
       }
     }
   },
-  mouted () {
-
-  }
+  mouted () {}
 }
 </script>
 <style lang="less" scoped>
@@ -163,6 +161,7 @@ export default {
       align-items: center;
       > img {
         height: 40px;
+        width: 180px;
       }
     }
   }
