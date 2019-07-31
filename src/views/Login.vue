@@ -94,7 +94,6 @@ export default {
       register(this.regData)
         .then(res => {
           if (res.status === 200) {
-            localStorage.setItem('xy-info', res.data)
             this.$notify({
               message: `注册成功，2s后跳转登录页面`,
               duration: 2000,
