@@ -1,17 +1,19 @@
 <template>
   <div class="home">
-    <header>
+    <Search v-show="showSearch" @cancelSearch="cancelSearch"></Search>
+    <div class="index" v-show="!showSearch">
+       <header>
       <div class="logo"></div>
-      <div class="search">
-        <input type="text" placeholder="搜索游记" />
+      <div class="search" @click="changeSearch" >
+        <input type="text" placeholder="搜索游记" disabled />
         <i class="iconfont iconsousuo"></i>
       </div>
-      <span>登录</span>
+      <span @click="login">登录</span>
     </header>
     <div class="banner">
       <van-swipe :autoplay="2000">
-        <van-swipe-item v-for="(image, index) in images" :key="index">
-          <img v-lazy="image" />
+        <van-swipe-item v-for="(value, index) in images" :key="index">
+          <img v-lazy="'http://157.122.54.189:9095'+value.url" />
         </van-swipe-item>
       </van-swipe>
     </div>
@@ -20,11 +22,11 @@
       <ul>
         <li>
           <div class="icon"></div>
-          <span>找攻略</span>
+          <span><router-link to="/strategy">找攻略</router-link></span>
         </li>
         <li>
           <div class="icon"></div>
-          <span>酒店</span>
+          <span><router-link to="/hotel">酒店</router-link></span>
         </li>
         <li>
           <div class="icon"></div>
@@ -32,11 +34,11 @@
         </li>
         <li>
           <div class="icon"></div>
-          <span>机票</span>
+          <span><router-link to="/airTic">机票</router-link></span>
         </li>
         <li>
           <div class="icon"></div>
-          <span>看游记</span>
+          <span><router-link to="/strategy">看游记</router-link></span>
         </li>
         <li>
           <div class="icon"></div>
@@ -60,17 +62,19 @@
       <div class="str-list">
         <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
           <ul>
-            <li v-for="(value,index) in list " :key="index">
-              <div class="item-title">{{value}}顺德|我有一个2天胖10斤的梦想</div>
+            <li v-for="item in list " :key="item.id">
+              <div class="item-title">{{item.title}}</div>
               <div class="item-content">
-                <img src="../assets/images/pic_sea.jpeg" alt />
+               <div class="item-l">
+                  <img :src="item.images[0]" alt />
+               </div>
                 <div class="item-r">
-                  <p>法国 继天堂之后最美丽的国度 La France est le plus beau royaume après le ciel. 法国 ，继天堂之后最美丽的国度。 如果说一座城市的建筑折射的是历史风干的化石，那 法国 的哥特式建筑则深刻地记录了民族的历史。去过 法国 的人，一定会为这里弥漫着的艺术气息与魅力而着迷。 喜欢 法国 是因为找不到任何讨厌这里的理由，他的一切汇聚成了我的乌托邦。 走过 法国 的边远小镇，素未谋面的擦肩流露着微笑，一句亲切的Bonjour就是 法国 人的常态。无论是C'est La Vie还是Oh la la，这句常挂在 法国 人嘴边的口头禅，道尽了对生活某些时</p>
+                  <p>{{item.summary}}</p>
                   <div class="item-bottom">
-                    <span>1111浏览</span>
+                    <span>{{item.watch}}浏览</span>
                     <span>
-                      harry
-                      <img src="../assets/images/qq.png" alt />
+                      {{item.account.nickname}}
+                      <img :src="'http://157.122.54.189:9095'+item.account.defaultAvatar" alt />
                     </span>
                   </div>
                 </div>
@@ -80,41 +84,85 @@
         </van-list>
       </div>
     </section>
+    </div>
   </div>
 </template>
 
 <script>
+import Search from '@/components/Search.vue'
+import { getBanners, getPosts } from '@/api/index'
 export default {
   name: 'home',
+  components: {
+    Search
+  },
   data () {
     return {
       images: [
-        'https://img.yzcdn.cn/vant/apple-1.jpg',
-        'https://img.yzcdn.cn/vant/apple-2.jpg'
+
       ],
       list: [],
+      posts: [],
       loading: false,
-      finished: false
+      finished: false,
+      showSearch: false
     }
   },
   methods: {
     onLoad () {
       // 异步更新数据
       setTimeout(() => {
-        for (let i = 0; i < 10; i++) {
-          this.list.push(this.list.length + 1)
+        for (let i = 0; i < 2; i++) {
+          let arr = this.posts.shift()
+          this.list.push(arr)
         }
         // 加载状态结束
         this.loading = false
 
         // 数据全部加载完成
-        if (this.list.length >= 40) {
+        if (this.posts.length === 0) {
           this.finished = true
         }
       }, 500)
+    },
+    // 跳出搜索框
+    changeSearch () {
+      console.log(111)
+      this.showSearch = true
+    },
+    cancelSearch () {
+      this.showSearch = false
+    },
+    login () {
+      this.$router.push({ name: 'login' })
+    },
+    getBanners () {
+      getBanners().then(res => {
+        if (res.status === 200) {
+          this.images = res.data.data
+        }
+      }).catch(err => {
+        console.log(err)
+      })
+    },
+    getPosts () {
+      getPosts().then(res => {
+        console.log(res.data.data)
+        if (res.status === 200) {
+          this.posts = res.data.data
+        }
+      })
+    },
+    init () {
+      this.getBanners()
+      this.getPosts()
     }
   },
-  mounted () {}
+  created () {
+  },
+  mounted () {
+    this.init()
+  }
 }
 </script>
 
@@ -283,13 +331,15 @@ export default {
           height: 90px;
           color: #999;
           font-size: 14px;
-          img{
+          .item-l{
             width: 130px;
             height: 90px;
+
           }
           .item-r{
             position: relative;
             margin-left: 15px;
+            flex: 1;
             p{
               width: 94%;
               overflow: hidden;
@@ -311,7 +361,7 @@ export default {
                   width: 20px;
                   height: 20px;
                   border-radius: 50%;
-                  vertical-align: middle;
+                  vertical-align: bottom;
                 }
               }
             }

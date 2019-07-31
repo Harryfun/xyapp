@@ -176,11 +176,13 @@ export default {
   .form-container {
     border: 1px solid #ccc;
     border-radius: 5px;
-    margin: 20px 0;
+    margin: 20px auto;
     overflow: hidden;
+    width: 99%;
   }
   /deep/.van-cell.van-field {
     border-bottom: 1px solid #ccc;
+    margin: 0;
     &:last-child {
       border-bottom: none;
     }

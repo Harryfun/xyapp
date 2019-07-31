@@ -1,5 +1,9 @@
 import axios from 'axios'
-// 获取验证码
-export const getCode = data => {
-  return axios.post('captchas', data)
+// 获取轮播图
+export const getBanners = () => {
+  return axios.get('scenics/banners')
+}
+// 获取游记列表
+export const getPosts = () => {
+  return axios.get('posts')
 }

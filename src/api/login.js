@@ -10,7 +10,7 @@ export const register = (data, headers) => {
   //     Authorization: `Bearer ${JSON.parse(localStorage.userToken)}`
   //   }
   // }
-
+  console.log(data)
   return axios.post('accounts/register')
 }
 // 用户注册
