@@ -1,7 +1,8 @@
 <template>
     <div class="strategy">
       <Xyheader></Xyheader>
-      <div class="date">
+      <div class="content" v-if="detail">
+        <div class="date">
         <div class="date-title">
           <div class="title-left">
             29
@@ -52,6 +53,7 @@
         <div class="cate"><i class="iconfont iconmulu1"></i>目录</div>
         <div class="reply"><i class="iconfont iconhuifu1"></i><span>{{detail.comments.length}}</span></div>
       </div>
+      </div>
     </div>
 </template>
 
@@ -88,7 +90,8 @@ export default {
 @xy-color: #409eff;
 .strategy{
   padding-top: 50px;
-  .date{
+  .content{
+    .date{
     color: #008489;
     text-align: center;
     padding-bottom: 20px;
@@ -229,6 +232,7 @@ export default {
         color: #fff;
       }
     }
+  }
   }
 }
 </style>
