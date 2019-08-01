@@ -19,53 +19,67 @@
       </div>
 
       <div class="banner">
-        <img src="../assets/images/pic_sea.jpeg" alt="">
+        <img :src="detail.images[0]" alt="">
       </div>
       <article>
         <div class="art-title">
-          顺德|我有一个2天胖10斤的梦想
+          {{detail.title}}
         </div>
         <div class="sub-title">
           <span class="time">19:10:29</span>
-          <span class="watch">浏览 · <strong>100</strong></span>
-          <span class="reply">回复 · <strong>10</strong></span>
+          <span class="watch">浏览 · <strong>{{detail.watch}}</strong></span>
+          <span class="reply">回复 · <strong>{{detail.comments.length}}</strong></span>
         </div>
         <div class="art-header">
           <div class="avatar">
-            <img src="../assets/images/qq.png" alt="">
+            <img :src="'http://127.0.0.1:1337'+detail.account.defaultAvatar" alt="">
           </div>
           <div class="info">
-            <div class="nickname">harryfun <span>Lv.15</span></div>
+            <div class="nickname">{{detail.account.nickname}} <span>Lv.15</span></div>
             <div class="fans">3篇游记，203粉丝</div>
           </div>
           <div class="place">
             顺德
           </div>
         </div>
-        <article>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Debitis similique quaerat, dicta incidunt voluptates a quos provident maxime veniam sed laborum minima, commodi culpa repellendus velit quam enim nesciunt magnam.
+        <article v-html="detail.content">
+
         </article>
       </article>
 
       <div class="tool">
         <div class="top"><i class="iconfont iconliubianxinghao1"></i> 2175</div>
         <div class="cate"><i class="iconfont iconmulu1"></i>目录</div>
-        <div class="reply"><i class="iconfont iconhuifu1"></i><span>101</span></div>
+        <div class="reply"><i class="iconfont iconhuifu1"></i><span>{{detail.comments.length}}</span></div>
       </div>
     </div>
 </template>
 
 <script>
+import { getPosts } from '@/api/index'
 import Xyheader from '@/components/Xyheader.vue'
 export default {
   name: 'strategy',
   data () {
     return {
-
+      detail: null
     }
   },
   components: {
     Xyheader
+  },
+  methods: {
+    init () {
+      let id = this.$route.params.id
+      getPosts({ id: id }).then((res) => {
+        this.detail = res.data.data[0]
+      }).catch(err => {
+        console.log(err)
+      })
+    }
+  },
+  created () {
+    this.init()
   }
 }
 </script>

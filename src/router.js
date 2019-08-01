@@ -18,7 +18,7 @@ export default new Router({
         import(/* webpackChunkName: "about" */ './views/Login.vue')
     },
     {
-      path: '/strategy',
+      path: '/strategy/:id',
       name: 'strategy',
       component: () =>
         import('./views/Strategy.vue')
