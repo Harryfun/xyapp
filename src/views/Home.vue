@@ -2,88 +2,88 @@
   <div class="home">
     <Search v-show="showSearch" @cancelSearch="cancelSearch"></Search>
     <div class="index" v-show="!showSearch">
-       <header>
-      <div class="logo"></div>
-      <div class="search" @click="changeSearch" >
-        <input type="text" placeholder="搜索游记" disabled />
-        <i class="iconfont iconsousuo"></i>
+      <header>
+        <div class="logo"></div>
+        <div class="search" @click="changeSearch" >
+          <input type="text" placeholder="搜索游记" disabled />
+          <i class="iconfont iconsousuo"></i>
+        </div>
+        <span @click="login">登录</span>
+      </header>
+      <div class="banner">
+        <van-swipe :autoplay="2000">
+          <van-swipe-item v-for="(value, index) in images" :key="index">
+            <img v-lazy="'http://157.122.54.189:9095'+value.url" />
+          </van-swipe-item>
+        </van-swipe>
       </div>
-      <span @click="login">登录</span>
-    </header>
-    <div class="banner">
-      <van-swipe :autoplay="2000">
-        <van-swipe-item v-for="(value, index) in images" :key="index">
-          <img v-lazy="'http://157.122.54.189:9095'+value.url" />
-        </van-swipe-item>
-      </van-swipe>
-    </div>
 
-    <nav>
-      <ul>
-        <li>
-          <div class="icon"></div>
-          <span><router-link to="/strategy">找攻略</router-link></span>
-        </li>
-        <li>
-          <div class="icon"></div>
-          <span><router-link to="/hotel">酒店</router-link></span>
-        </li>
-        <li>
-          <div class="icon"></div>
-          <span>去旅行</span>
-        </li>
-        <li>
-          <div class="icon"></div>
-          <span><router-link to="/airTic">机票</router-link></span>
-        </li>
-        <li>
-          <div class="icon"></div>
-          <span><router-link to="/strategy">看游记</router-link></span>
-        </li>
-        <li>
-          <div class="icon"></div>
-          <span>结伴</span>
-        </li>
-        <li>
-          <div class="icon"></div>
-          <span>问达人</span>
-        </li>
-        <li>
-          <div class="icon"></div>
-          <span>找攻略</span>
-        </li>
-      </ul>
-    </nav>
-    <!-- 攻略部分 -->
-    <section class="strategy">
-      <div class="str-title">
-        <h3>推荐攻略</h3>
-      </div>
-      <div class="str-list">
-        <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
-          <ul>
-            <li v-for="item in list " :key="item.id">
-              <div class="item-title">{{item.title}}</div>
-              <div class="item-content">
-               <div class="item-l">
-                  <img :src="item.images[0]" alt />
-               </div>
-                <div class="item-r">
-                  <p>{{item.summary}}</p>
-                  <div class="item-bottom">
-                    <span>{{item.watch}}浏览</span>
-                    <span>
-                      {{item.account.nickname}}
-                      <img :src="'http://157.122.54.189:9095'+item.account.defaultAvatar" alt />
-                    </span>
+      <nav>
+        <ul>
+          <li>
+            <div class="icon"></div>
+            <span><router-link to="/strategy">找攻略</router-link></span>
+          </li>
+          <li>
+            <div class="icon"></div>
+            <span><router-link to="/hotel">酒店</router-link></span>
+          </li>
+          <li>
+            <div class="icon"></div>
+            <span>去旅行</span>
+          </li>
+          <li>
+            <div class="icon"></div>
+            <span><router-link to="/airTic">机票</router-link></span>
+          </li>
+          <li>
+            <div class="icon"></div>
+            <span><router-link to="/strategy">看游记</router-link></span>
+          </li>
+          <li>
+            <div class="icon"></div>
+            <span>结伴</span>
+          </li>
+          <li>
+            <div class="icon"></div>
+            <span>问达人</span>
+          </li>
+          <li>
+            <div class="icon"></div>
+            <span>找攻略</span>
+          </li>
+        </ul>
+      </nav>
+      <!-- 攻略部分 -->
+      <section class="strategy">
+        <div class="str-title">
+          <h3>推荐攻略</h3>
+        </div>
+        <div class="str-list">
+          <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
+            <ul>
+              <li v-for="item in list " :key="item.id">
+                <div class="item-title">{{item.title}}</div>
+                <div class="item-content">
+                <div class="item-l">
+                    <img :src="item.images[0]" alt />
+                </div>
+                  <div class="item-r">
+                    <p>{{item.summary}}</p>
+                    <div class="item-bottom">
+                      <span>{{item.watch}}浏览</span>
+                      <span>
+                        {{item.account.nickname}}
+                        <img :src="'http://157.122.54.189:9095'+item.account.defaultAvatar" alt />
+                      </span>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </li>
-          </ul>
-        </van-list>
-      </div>
-    </section>
+              </li>
+            </ul>
+          </van-list>
+        </div>
+      </section>
     </div>
   </div>
 </template>
@@ -123,7 +123,7 @@ export default {
         if (this.posts.length === 0) {
           this.finished = true
         }
-      }, 500)
+      }, 1000)
     },
     // 跳出搜索框
     changeSearch () {

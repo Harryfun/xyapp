@@ -16,6 +16,12 @@ export default new Router({
       name: 'login',
       component: () =>
         import(/* webpackChunkName: "about" */ './views/Login.vue')
+    },
+    {
+      path: '/strategy',
+      name: 'strategy',
+      component: () =>
+        import('./views/Strategy.vue')
     }
   ]
 })
