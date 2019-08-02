@@ -20,3 +20,6 @@ body{
     font-family: 'PingFangSC-Light',Arial,Helvetica,sans-serif,"Hiragino Sans GB";
     color: #474747;
 }
+html,body,#app{
+    height: 100%;
+}

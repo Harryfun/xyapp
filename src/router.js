@@ -28,6 +28,12 @@ export default new Router({
       name: 'strategy',
       component: () =>
         import('./views/Strategy.vue')
+    },
+    {
+      path: '/calendar',
+      name: 'calendar',
+      component: () =>
+        import('./views/Calendar.vue')
     }
   ]
 })

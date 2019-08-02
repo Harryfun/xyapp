@@ -17,7 +17,7 @@
             </span>
             <div class="line"></div>
           </div>
-          <div class="title-right">
+          <div class="title-right" @click="toCal">
             历历在目
             <i class="iconfont iconrili1"></i>
           </div>
@@ -123,6 +123,9 @@ export default {
           this.swiperList = [ ...res.data.data ]
         }
       })
+    },
+    toCal () {
+      this.$router.push({ name: 'calendar' })
     },
     init () {
       this.getPosts()
