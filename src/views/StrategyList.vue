@@ -22,47 +22,50 @@
             <i class="iconfont iconrili1"></i>
           </div>
         </div>
-        <van-tabs swipeable animated>
-        <van-tab v-for="index in 4" :key="index">
-         <div class="card">
+      <van-swipe  :autoplay="3000"  @change="onChange" touchable>
+        <van-swipe-item  v-for="item in swiperList" :key="item.id" ><div class="card">
            <div class="card-title">
-             <img src="../assets/images/pic_sea.jpeg" alt="">
+             <img :src="item.images[0]" alt="">
            </div>
            <div class="card-content">
-             <p>顺德 | 我有一个2天胖10斤的梦想{{index}}</p>
-             <p>我是<span>Harry</span>,我在<span>顺德</span></p>
+             <p>{{item.title}}</p>
+             <p>我是<span>{{item.account.nickname}}</span>&nbsp;&nbsp;&nbsp;我在<span>{{item.cityName}}</span></p>
            </div>
-         </div>
-        </van-tab>
-      </van-tabs>
+         </div></van-swipe-item>
+        <div class="custom-indicator" slot="indicator">
+          <div :class="{indicator: true,active:current == index}" v-for="(item,index) in swiperList " :key="item.id">
+            <img :src="item.images[0]" alt="">
+          </div>
+        </div>
+      </van-swipe>
       </header>
 
       <div class="list">
           <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
             <ul>
-              <li v-for="(item,index) in 10" :key="index">
+              <li v-for="item in list " :key="item.id">
                 <div class="left">
                   <div class="title">
-                    曼谷＋象岛｜“泰”享受！看海发呆美食逛..
+                  {{item.title}}
                   </div>
                   <div class="writer">
                     <div class="person">
                       <div class="avatar">
-                      <img src="../assets/images/qq.png" alt="">
+                      <img :src="'http://157.122.54.189:9095'+item.account.defaultAvatar" alt="">
                     </div>
-                    <span>harry</span>
+                    <span> {{item.account.nickname}}</span>
                     </div>
-                    <span>在<i>泰国</i></span>
+                    <span>在<i>{{item.cityName}}</i></span>
                   </div>
                   <div class="info">
                     <i class="iconfont iconyanjing1"></i>
-                    <span>3122</span>
+                    <span>{{item.watch}}</span>
                     <i class="iconfont iconhuifu1"></i>
-                    <span>38</span>
+                    <span>{{item.comments.length}}</span>
                   </div>
                 </div>
                 <div class="right">
-                  <img src="../assets/images/pic_sea.jpeg" alt="">
+                    <img :src="item.images[0]" alt="">
                 </div>
               </li>
             </ul>
@@ -72,13 +75,19 @@
 </template>
 
 <script>
-// import { getPosts } from '@/api/index'
+import { getPosts } from '@/api/index'
 import Xyheader from '@/components/Xyheader.vue'
 export default {
   name: 'strategyList',
   data () {
     return {
-      detail: null
+      detail: null,
+      current: 0,
+      list: [],
+      swiperList: [],
+      posts: [],
+      loading: false,
+      finished: false
     }
   },
   components: {
@@ -88,20 +97,35 @@ export default {
     onLoad () {
       // 异步更新数据
       setTimeout(() => {
-        for (let i = 0; i < 10; i++) {
-          this.list.push(this.list.length + 1)
+        for (let i = 0; i < 2; i++) {
+          let arr = this.posts.shift()
+          this.list.push(arr)
         }
         // 加载状态结束
         this.loading = false
 
         // 数据全部加载完成
-        if (this.list.length >= 40) {
+        if (this.posts.length === 0) {
           this.finished = true
         }
-      }, 500)
+      }, 1000)
+    },
+    onChange (index) {
+      this.current = index
+    },
+    getPosts () {
+      console.log(111)
+      getPosts().then(res => {
+        console.log(res.data.data)
+        if (res.status === 200) {
+          this.posts = [ ...res.data.data ]
+          console.log(this.posts)
+          this.swiperList = [ ...res.data.data ]
+        }
+      })
     },
     init () {
-
+      this.getPosts()
     }
   },
   created () {
@@ -166,18 +190,45 @@ export default {
        }
     }
   }
-  /deep/.van-tabs__wrap{
-      bottom: -310px;
-      left: 0;
-      background-color: #000;
-      z-index:99;
+  .van-swipe{
+    height: 366px;
+  }
+  .custom-indicator{
+    position: absolute;
+    width: 100%;
+    bottom: 6px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .indicator{
+      width: 50px;
+      height: 50px;
+      border-radius: 10px;
+      overflow: hidden;
+      margin: 0 10px;
+      position: relative;
+      img{
+        height: 100%;
+      }
+      &::after{
+        content:'';
+        position: absolute;
+        bottom: -1px;
+        left: 50%;
+        transform: translate(-50%);
+        width: 70%;
+        height: 4px;
+        background-color: #6a9bdd;
+        border-radius: 2px;
+        display: none;
+      }
+      &.active{
+        &::after{
+          display: block;
+        }
+      }
     }
-    /deep/.van-tabs__content{
-      transform: translateY(-40px)
-    }
-    /deep/.van-tabs__nav{
-      background-color: transparent !important;
-    }
+  }
   .card{
     width: 356px;
     height: 300px;
@@ -195,6 +246,11 @@ export default {
       font-size: 22px;
       padding: 18px;
       text-align: center;
+      p:first-child{
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
       p:last-child{
         font-size: 18px;
         margin-top: 4px;
@@ -207,7 +263,7 @@ export default {
   .list{
     li{
       display: flex;
-      padding: 15px 0 15px 15px;
+      padding: 8px 0 8px 8px;
       .left{
         flex:1;
         margin-right: 20px;
@@ -263,7 +319,11 @@ export default {
         }
       }
       .right{
+        height: 130px;
         flex: 1;
+        img{
+          height: 90%;
+        }
       }
     }
   }
