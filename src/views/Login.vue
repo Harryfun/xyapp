@@ -56,6 +56,7 @@
 <script>
 import { getCode, register, login } from '@/api/login'
 import { setLocal } from '@/utils/utils'
+import { mapMutations } from 'vuex'
 export default {
   name: 'login',
   data () {
@@ -73,6 +74,7 @@ export default {
     }
   },
   methods: {
+    ...mapMutations(['changeToken']),
     getCode () {
       let data = {
         tel: this.regData.username
@@ -118,6 +120,7 @@ export default {
         .then(res => {
           setLocal('userInfo', res.data.user)
           setLocal('userToken', res.data.token)
+          this.changeToken({ userInfo: res.data.user, userToken: res.data.token })
           this.$notify({
             message: `欢迎您${res.data.user.nickname},1s后将跳转首页`,
             duration: 2000,

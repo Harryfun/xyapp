@@ -33,8 +33,10 @@
             </router-link>
           </li>
           <li>
-            <div class="icon"></div>
-            <span>去旅行</span>
+            <router-link to="/calendar">
+              <div class="icon"></div>
+              <span>去旅行</span>
+            </router-link>
           </li>
           <li>
             <router-link to="/airTic">
@@ -49,16 +51,22 @@
             </router-link>
           </li>
           <li>
-            <div class="icon"></div>
-            <span>结伴</span>
+            <router-link to="/hotel">
+              <div class="icon"></div>
+              <span>结伴</span>
+            </router-link>
           </li>
           <li>
-            <div class="icon"></div>
-            <span>问达人</span>
+            <router-link to="/hotel">
+              <div class="icon"></div>
+              <span>问达人</span>
+            </router-link>
           </li>
           <li>
-            <div class="icon"></div>
-            <span>找攻略</span>
+          <router-link to="/hotel">
+              <div class="icon"></div>
+              <span>找攻略</span>
+          </router-link>
           </li>
         </ul>
       </nav>
@@ -237,11 +245,14 @@ export default {
       font-size: 16px;
       li {
         flex: 25%;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        color: #ff9e03;
+        a{
+          width: 100%;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          color: #ff9e03;
+        }
         span{
           margin: 8px 0 10px;
         }

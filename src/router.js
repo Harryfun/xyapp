@@ -34,6 +34,12 @@ export default new Router({
       name: 'calendar',
       component: () =>
         import('./views/Calendar.vue')
+    },
+    {
+      path: '/hotel',
+      name: 'hotel',
+      component: () =>
+        import('./views/Hotel.vue')
     }
   ]
 })

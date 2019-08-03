@@ -5,10 +5,14 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-
+    userToken: localStorage.userToken ? JSON.parse(localStorage.userToken) : '',
+    userInfo: localStorage.userInfo ? JSON.parse(localStorage.userInfo) : ''
   },
   mutations: {
-
+    changeToken (state, item) {
+      state.userToken = item.userToken
+      state.userInfo = item.userInfo
+    }
   },
   actions: {
 
