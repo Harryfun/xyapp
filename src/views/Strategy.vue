@@ -9,7 +9,7 @@
           </div>
           <div class="title-right">
             <div class="title-top">
-              2 0 1 9
+              2019
             </div>
             <div class="title-bottom">
               JUL
@@ -110,6 +110,7 @@ export default {
       .title-right{
         border-right: 4px solid #008489;
         padding: 0 15px;
+        font-size: 28px;
         text-align: center;
       }
     }
@@ -222,7 +223,7 @@ export default {
       >span{
         position: absolute;
         top: -4px;
-        right: -14px;
+        right: -6px;
         background-color: #f00;
         height: 18px;
         line-height: 18px;

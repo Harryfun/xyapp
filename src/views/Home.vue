@@ -21,24 +21,32 @@
       <nav>
         <ul>
           <li>
-            <div class="icon"></div>
-            <span><router-link to="/strategy">找攻略</router-link></span>
+            <router-link to="/calendar">
+              <div class="icon"></div>
+              <span>找攻略</span>
+            </router-link>
           </li>
           <li>
-            <div class="icon"></div>
-            <span><router-link to="/hotel">酒店</router-link></span>
+            <router-link to="/hotel">
+              <div class="icon"></div>
+              <span>酒店</span>
+            </router-link>
           </li>
           <li>
             <div class="icon"></div>
             <span>去旅行</span>
           </li>
           <li>
-            <div class="icon"></div>
-            <span><router-link to="/airTic">机票</router-link></span>
+            <router-link to="/airTic">
+              <div class="icon"></div>
+              <span>机票</span>
+            </router-link>
           </li>
           <li>
-            <div class="icon"></div>
-            <span><router-link to="/strategy">看游记</router-link></span>
+            <router-link to="/strategyList">
+              <div class="icon"></div>
+              <span>看游记</span>
+            </router-link>
           </li>
           <li>
             <div class="icon"></div>
