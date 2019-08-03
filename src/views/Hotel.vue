@@ -1,7 +1,9 @@
 
 <template>
     <div class="hotel">
-      <XyHeader></XyHeader>
+        <XyHeader></XyHeader>
+      <City v-if="cityShow" @getVal="getVal"></City>
+      <div class="container" v-else>
       <div class="coupon">
         <img src="../assets/images/coupon-banner-gif.gif" alt="">
       </div>
@@ -9,7 +11,7 @@
         <div class="address item">
           <div class="left">
             <p class="sub-title">目的地</p>
-            <div>目的地/城市</div>
+            <div @click="cityShow = true" :class="{active:addressAc}">{{address}}</div>
           </div>
           <div class="right">
             <img src="../assets/images/geo.png" alt="">
@@ -19,23 +21,24 @@
         <div class="date item">
           <div class="inhouse sel">
             <p class="sub-title">入住</p>
-            <div>9月4日</div>
+            <div @click="showDate('enterTime')">{{enterDate}}</div>
           </div>
           <span>-</span>
           <div class="outhouse sel">
             <p class="sub-title">离店</p>
-            <div>9月11日</div>
+            <div @click="showDate('leftTime')">{{leaveDate}}</div>
           </div>
         </div>
         <div class="person item sel">
           <p class="sub-title">每间</p>
-          <div>2成人，0儿童</div>
+          <div @click="personShow = true">{{personData}}</div>
         </div>
         <button>查找酒店</button>
       </div>
       <div class="footer">
         <div>
-           <div> <img src="../assets/images/coupon.png" alt=""></div>
+           <div
+        @click="showList = true"> <img src="../assets/images/coupon.png" alt=""></div>
             优惠券
         </div>
         <div>
@@ -47,27 +50,166 @@
             我的订单
         </div>
       </div>
+      </div>
+      <!-- 时间选择器 -->
+
+      <van-popup v-model="dateShow" position="bottom">
+         <van-datetime-picker
+          v-model="currentDate"
+          type="date"
+          :title="title"
+          @cancel="dateShow = false"
+          @confirm="getDate"
+        />
+      </van-popup>
+      <van-popup v-model="personShow" position="bottom">
+        <van-picker :columns="columns" @change="onChange" title="人数选择" show-toolbar  @cancel="personShow=false"
+        @confirm="confirmPer"/>
+      </van-popup>
+    <!-- 优惠券部分 -->
+    <!-- 优惠券单元格 -->
+      <!-- 优惠券列表 -->
+      <van-popup v-model="showList" position="bottom">
+        <van-coupon-list
+          :coupons="coupons"
+          :chosen-coupon="chosenCoupon"
+          :disabled-coupons="disabledCoupons"
+          @change="onChangeCou"
+          @exchange="onExchange"
+        />
+      </van-popup>
     </div>
 </template>
 
 <script>
 import { mapState } from 'vuex'
+import { formatDate } from '@/utils/utils'
 import XyHeader from '@/components/Xyheader.vue'
+import City from '@/components/City.vue'
+const personData = {
+  '1成人': ['0儿童', '1儿童', '2儿童', '3儿童'],
+  '2成人': ['0儿童', '1儿童', '2儿童', '3儿童'],
+  '3成人': ['0儿童', '1儿童', '2儿童', '3儿童'],
+  '4成人': ['0儿童', '1儿童', '2儿童', '3儿童']
+}
+const coupon = {
+  available: 1,
+  condition: '无使用门槛\n最多优50元',
+  reason: '',
+  value: 150,
+  name: '酒店新人红包',
+  startAt: 1489104000,
+  endAt: 1514592000,
+  valueDesc: '50',
+  unitDesc: '元'
+}
 export default {
   name: 'hotel',
   components: {
-    XyHeader
+    XyHeader,
+    City
   },
   data () {
     return {
-
+      city: [],
+      cityShow: false,
+      address: '目的地/城市',
+      addressAc: false,
+      dateShow: false,
+      personShow: false,
+      startDate: new Date(),
+      endDate: new Date(),
+      currentDate: new Date(),
+      title: '入住日期',
+      enterTime: '',
+      leftTime: '',
+      enterDate: '',
+      leaveDate: '',
+      currentStatus: null,
+      columns: [
+        {
+          values: Object.keys(personData),
+          className: 'column1',
+          defaultIndex: 1
+        },
+        {
+          values: personData['1成人'],
+          className: 'column2',
+          defaultIndex: 0
+        }
+      ],
+      personData: '',
+      // 优惠券
+      chosenCoupon: -1,
+      coupons: [coupon],
+      disabledCoupons: [coupon],
+      showList: false
     }
   },
   computed: {
     ...mapState(['userToken', 'userInfo'])
   },
   methods: {
+    getVal (val) {
+      this.cityShow = false
+      this.address = val
+      this.addressAc = true
+      console.log(val, '--------------')
+    },
+    getDate (val) {
+      console.log(val)
+      let arr = formatDate(val).split('-')
+      let text = `${arr[1]}月${arr[2]}日`
+      if (this.currentStatus === 'enterTime') {
+        this.enterTime = formatDate(val)
+        this.enterDate = text
+      } else if (this.currentStatus === 'leftTime') {
+        this.leftTime = formatDate(val)
+        this.leaveDate = text
+      }
+      this.dateShow = false
+    },
+    showDate (val) {
+      this.dateShow = true
+      this.currentStatus = val
+      if (this.currentStatus === 'enterTime') {
+        this.title = '入住日期'
+      } else {
+        this.title = '离店日期'
+      }
+    },
+    onChange (picker, values) {
+      picker.setColumnValues(1, personData[values[0]])
+    },
+    // 获取人数信息
+    confirmPer (val) {
+      console.log(val)
+      this.personShow = false
+      this.personData = val.join(',')
+    },
+    // 优惠券
+    onChangeCou (index) {
+      this.showList = false
+      this.chosenCoupon = index
+    },
+    onExchange (code) {
+      this.coupons.push(coupon)
+    },
+    init () {
+    // 获取初始结束时间
+      this.enterTime = formatDate(new Date())
+      this.leftTime = formatDate(new Date())
+      let arr = formatDate(new Date()).split('-')
+      let text = `${arr[1]}月${arr[2]}日`
+      this.enterDate = text
+      this.leaveDate = text
 
+      this.personData = '2成人,0儿童'
+    }
+  },
+
+  created () {
+    this.init()
   },
   mounted () {
     console.log(this.userInfo, this.userToken)
@@ -121,6 +263,9 @@ export default {
           >div{
             color: #c1c1cc;
             font-weight: 600;
+            &.active{
+              color: #474747;
+            }
           }
         }
         .right{
