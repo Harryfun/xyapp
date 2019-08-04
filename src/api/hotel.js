@@ -9,3 +9,9 @@ export const getCity = (data) => {
     params: data
   })
 }
+// 获取酒店列表
+export const getHotelList = (data) => {
+  return axios.get('/hotels', {
+    params: data
+  })
+}

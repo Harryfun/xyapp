@@ -34,6 +34,21 @@ Vue.use(Tab)
   .use(CouponList)
 axios.defaults.baseURL = 'http://127.0.0.1:1337/'
 
+// 拦截器设置loading
+// 定义一个请求拦截器
+axios.interceptors.request.use(function (config) {
+  // 在请求发出之前进行一些操作
+  store.commit('changeload', true)
+  return config
+})
+// 定义一个响应拦截器
+axios.interceptors.response.use(function (config) {
+  // 在这里对返回的数据进行处理
+  setTimeout(() => {
+    store.commit('changeload', false)
+  }, 1000)
+  return config
+})
 Vue.config.productionTip = false
 
 new Vue({

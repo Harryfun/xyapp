@@ -1,5 +1,6 @@
 <template>
   <div class="login">
+    <Loading></Loading>
     <!-- 头部logo -->
     <header>
       <div class="logo">
@@ -56,9 +57,13 @@
 <script>
 import { getCode, register, login } from '@/api/login'
 import { setLocal } from '@/utils/utils'
+import Loading from '@/components/Loading.vue'
 import { mapMutations } from 'vuex'
 export default {
   name: 'login',
+  components: {
+    Loading
+  },
   data () {
     return {
       loginData: {

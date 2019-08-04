@@ -31,6 +31,8 @@ export default {
       stickyTop: 50
     }
   },
+  components: {
+  },
   methods: {
     getVal (val) {
       this.$emit('getVal', val)
@@ -66,6 +68,7 @@ export default {
     top: 0px;
     z-index: 80;
     background: #fff;
+    height: 100%;
     .title,.titleZ{
         height: 30px;
         line-height: 30px;

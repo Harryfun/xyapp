@@ -1,9 +1,12 @@
 
 <template>
     <div class="hotel">
+        <Loading></Loading>
         <XyHeader></XyHeader>
-      <City v-if="cityShow" @getVal="getVal"></City>
-      <div class="container" v-else>
+        <van-popup v-model="cityShow"  position="right">
+            <City @getVal="getVal"></City>
+        </van-popup>
+      <div class="container">
       <div class="coupon">
         <img src="../assets/images/coupon-banner-gif.gif" alt="">
       </div>
@@ -33,7 +36,7 @@
           <p class="sub-title">每间</p>
           <div @click="personShow = true">{{personData}}</div>
         </div>
-        <button>查找酒店</button>
+        <button @click="toHotelList">查找酒店</button>
       </div>
       <div class="footer">
         <div>
@@ -84,8 +87,10 @@
 <script>
 import { mapState } from 'vuex'
 import { formatDate } from '@/utils/utils'
+import { getCity } from '@/api/hotel'
 import XyHeader from '@/components/Xyheader.vue'
 import City from '@/components/City.vue'
+import Loading from '@/components/Loading.vue'
 const personData = {
   '1成人': ['0儿童', '1儿童', '2儿童', '3儿童'],
   '2成人': ['0儿童', '1儿童', '2儿童', '3儿童'],
@@ -107,25 +112,34 @@ export default {
   name: 'hotel',
   components: {
     XyHeader,
-    City
+    City,
+    Loading
   },
   data () {
     return {
-      city: [],
+      // 城市列表弹出层
       cityShow: false,
+      // 目的地信息
       address: '目的地/城市',
+      // 获取值之后更改类名
       addressAc: false,
+      // 日期选择器弹出层
       dateShow: false,
+      // 人数弹出层
       personShow: false,
-      startDate: new Date(),
-      endDate: new Date(),
+      // 当前日期
       currentDate: new Date(),
+      // 日期弹出层的标题
       title: '入住日期',
+      // 入住/离开日期 传递的数据
       enterTime: '',
       leftTime: '',
+      // 入住/离开日期 显示在页面上的数据
       enterDate: '',
       leaveDate: '',
+      // 时间选择器 判断是入住还是离开
       currentStatus: null,
+      // 人数选择器的数据
       columns: [
         {
           values: Object.keys(personData),
@@ -138,6 +152,7 @@ export default {
           defaultIndex: 0
         }
       ],
+      // 人数数据
       personData: '',
       // 优惠券
       chosenCoupon: -1,
@@ -147,19 +162,31 @@ export default {
     }
   },
   computed: {
-    ...mapState(['userToken', 'userInfo'])
+    ...mapState(['userToken', 'userInfo', 'loadShow'])
   },
   methods: {
+    // 获取地址栏信息
     getVal (val) {
+      // 关闭弹出层
       this.cityShow = false
       this.address = val
+      // 替换初始的placeholder样式
       this.addressAc = true
-      console.log(val, '--------------')
+      // 根据名字获取id
+      getCity({
+        name: val
+      }).then(res => {
+        console.log(res)
+      }).catch(err => {
+        console.log(err)
+      })
     },
+    // 获取日期
     getDate (val) {
       console.log(val)
       let arr = formatDate(val).split('-')
       let text = `${arr[1]}月${arr[2]}日`
+      // 根据入住和离开判断标题
       if (this.currentStatus === 'enterTime') {
         this.enterTime = formatDate(val)
         this.enterDate = text
@@ -169,6 +196,7 @@ export default {
       }
       this.dateShow = false
     },
+    // 显示时间选择器弹出层
     showDate (val) {
       this.dateShow = true
       this.currentStatus = val
@@ -194,6 +222,14 @@ export default {
     },
     onExchange (code) {
       this.coupons.push(coupon)
+    },
+    toHotelList () {
+      this.$router.push({ name: 'hotelList',
+        params: {
+          city: 74,
+          enterTime: this.enterTime,
+          leftTime: this.leftTime
+        } })
     },
     init () {
     // 获取初始结束时间

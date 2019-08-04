@@ -1,5 +1,6 @@
 <template>
   <div class="home">
+    <Loading></Loading>
     <Search v-show="showSearch" @cancelSearch="cancelSearch"></Search>
     <div class="index" v-show="!showSearch">
       <header>
@@ -106,11 +107,13 @@
 
 <script>
 import Search from '@/components/Search.vue'
+import Loading from '@/components/Loading.vue'
 import { getBanners, getPosts } from '@/api/index'
 export default {
   name: 'home',
   components: {
-    Search
+    Search,
+    Loading
   },
   data () {
     return {

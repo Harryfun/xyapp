@@ -1,5 +1,6 @@
 <template>
     <div class="calendar">
+      <Loading></Loading>
         <i class="iconfont iconfanhui" @click="$router.back(-1)"></i>
         <van-tabs :ellipsis="false" :border="false" :sticky="true">
             <van-tab v-for="(item,index) in calData" :title="item.year" :key="index">
@@ -23,6 +24,7 @@
 
 <script>
 import imgData from '@/utils/imgData'
+import Loading from '@/components/Loading.vue'
 import { getRandom } from '@/utils/utils'
 export default {
   name: 'calender',
@@ -31,6 +33,9 @@ export default {
     return {
       calData: []
     }
+  },
+  components: {
+    Loading
   },
   methods: {
     getData () {

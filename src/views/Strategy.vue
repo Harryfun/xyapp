@@ -1,5 +1,6 @@
 <template>
     <div class="strategy">
+      <Loading></Loading>
       <Xyheader></Xyheader>
       <div class="content" v-if="detail">
         <div class="date">
@@ -60,6 +61,7 @@
 <script>
 import { getPosts } from '@/api/index'
 import Xyheader from '@/components/Xyheader.vue'
+import Loading from '@/components/Loading.vue'
 export default {
   name: 'strategy',
   data () {
@@ -68,7 +70,8 @@ export default {
     }
   },
   components: {
-    Xyheader
+    Xyheader,
+    Loading
   },
   methods: {
     init () {

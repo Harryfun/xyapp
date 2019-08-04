@@ -1,5 +1,6 @@
 <template>
     <div class="strategyList">
+      <Loading></Loading>
       <Xyheader></Xyheader>
       <header>
         <div class="header-title">
@@ -77,6 +78,7 @@
 <script>
 import { getPosts } from '@/api/index'
 import Xyheader from '@/components/Xyheader.vue'
+import Loading from '@/components/Loading.vue'
 export default {
   name: 'strategyList',
   data () {
@@ -91,7 +93,8 @@ export default {
     }
   },
   components: {
-    Xyheader
+    Xyheader,
+    Loading
   },
   methods: {
     onLoad () {
