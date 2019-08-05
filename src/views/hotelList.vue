@@ -10,7 +10,7 @@
                 <p>09月-04日 -- 09月-11日</p>
             </div>
             <div class="header-right">
-                <i class="iconfont iconsousuo2"></i>
+                <i class="iconfont iconsousuo2" ></i>
             </div>
         </header>
 
@@ -26,47 +26,45 @@
                 <span>筛选</span>
             </div>
         </section>
+        <van-list
+            v-model="loading"
+            :finished="finished"
+            finished-text="没有更多了"
+            @load="getHotelList"
+            >
         <ul class="main">
-             <li class="item">
+             <li class="item" v-for="(item,index) in hotelList" :key="index" @click="toHotelDetail(item)">
                 <div class="item-l">
-                    <img src="../assets/images/pic_sea.jpeg" alt="">
+                    <img :src="item.photos" alt="">
                 </div>
                 <div class="item-r">
-                    <h4>南京中心大酒店</h4>
-                    <p class="titleE">Central Hotel</p>
-                    <p class="comments"><span>62</span>云评，<span>10</span>游记提及</p>
+                    <h4>{{item.name}}</h4>
+                    <p class="titleE">{{item.alias}}</p>
+                    <p class="comments"><span class="lang">{{item.all_remarks}}</span>云评，<span class="lang">{{item.num_collected}}</span>游记提及</p>
                     <p class="loc">
-                        <span>位于新街口/豪华</span>
-                        <span class="rmb"><span>&yen;490</span>起</span>
-                    </p>
-                </div>
-            </li>
-            <li class="item">
-                <div class="item-l">
-                    <img src="../assets/images/pic_sea.jpeg" alt="">
-                </div>
-                <div class="item-r">
-                    <h4>南京中心大酒店</h4>
-                    <p class="titleE">Central Hotel</p>
-                    <p class="comments"><span class="lang">62</span>云评，<span class="lang">10</span>游记提及</p>
-                    <p class="loc">
-                        <span>位于新街口/豪华</span>
+                        <span>位于{{item.business_area}}/豪华</span>
                         <span class="rmb"><span>&yen;490</span>起</span>
                     </p>
                 </div>
             </li>
         </ul>
+        </van-list>
     </div>
 </template>
 
 <script>
 import Loading from '@/components/Loading.vue'
 import { getHotelList } from '@/api/hotel'
+import { mapMutations } from 'vuex'
 export default {
   name: 'hotelList',
   data () {
     return {
-      hotelInfo: {}
+      hotelInfo: {},
+      hotelList: [],
+      total: 0,
+      finished: false,
+      loading: false
     }
   },
   components: {
@@ -74,19 +72,39 @@ export default {
   },
   methods: {
     getHotelList () {
+      // 准备数据
+      this.hotelInfo._start += this.hotelInfo._limit
       getHotelList(this.hotelInfo).then(res => {
-        console.log(res)
+        this.hotelList.push(...res.data.data)
+        this.total = res.data.total
+        console.log(this.hotelList)
+        // 加载状态结束
+        this.loading = false
+        // 数据全部加载完成
+        if (this.hotelList.length >= this.total) {
+          console.log(this.hotelList.length, this.total)
+          this.finished = true
+        }
       }).catch(err => {
         console.log(err)
       })
     },
+    // 存储用户选中的酒店到vuex中
+    ...mapMutations(['SAVE_HOTEL']),
+    toHotelDetail (detail) {
+      this.SAVE_HOTEL(detail)
+      this.$router.push(
+        { name: 'hotelDetail' }
+      )
+    },
+
     init () {
       this.hotelInfo = this.$route.params
-      this.getHotelList()
-      console.log(this.$route.params)
+      this.hotelInfo._limit = 6
+      this.hotelInfo._start = -6
     }
   },
-  mounted () {
+  created () {
     this.init()
   }
 }
@@ -149,6 +167,7 @@ export default {
                     flex: 1;
                     position: relative;
                     h4{
+                        width: 185px;
                         font-size: 20px;
                         font-weight: 600;
                         height: 20px;
@@ -160,6 +179,10 @@ export default {
                         color: #474747;
                     }
                     .titleE{
+                        width: 175px;
+                        overflow: hidden;
+                        white-space: nowrap;
+                        text-overflow: ellipsis;
                         font-size: 14px;
                         height: 24px;
                         line-height: 24px;

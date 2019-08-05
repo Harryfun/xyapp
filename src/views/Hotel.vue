@@ -85,7 +85,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapMutations } from 'vuex'
 import { formatDate } from '@/utils/utils'
 import { getCity } from '@/api/hotel'
 import XyHeader from '@/components/Xyheader.vue'
@@ -162,7 +162,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['userToken', 'userInfo', 'loadShow'])
+    ...mapState(['userToken', 'userInfo', 'loadShow', 'dataInfo'])
   },
   methods: {
     // 获取地址栏信息
@@ -215,6 +215,8 @@ export default {
       this.personShow = false
       this.personData = val.join(',')
     },
+    // 存储入住以及离开信息到vuex中
+    ...mapMutations(['SAVE_DATE']),
     // 优惠券
     onChangeCou (index) {
       this.showList = false
@@ -224,6 +226,12 @@ export default {
       this.coupons.push(coupon)
     },
     toHotelList () {
+      this.SAVE_DATE({
+        city: 74,
+        enterTime: this.enterTime,
+        leftTime: this.leftTime,
+        personData: this.personData
+      })
       this.$router.push({ name: 'hotelList',
         params: {
           city: 74,

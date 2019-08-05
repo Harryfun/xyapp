@@ -44,6 +44,10 @@ export default new Router({
       path: '/hotelList',
       name: 'hotelList',
       component: () => import('./views/hotelList.vue')
+    }, {
+      path: '/hotelDetail',
+      name: 'hotelDetail',
+      component: () => import('./views/hotelDetail.vue')
     }
   ]
 })

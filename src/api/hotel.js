@@ -1,4 +1,5 @@
 import axios from 'axios'
+
 // 查询热门城市
 export const getHot = (data) => {
   return axios.get('/posts/cities')
