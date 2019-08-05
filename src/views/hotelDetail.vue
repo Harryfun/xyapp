@@ -23,15 +23,16 @@
             <div class="hotel-title">
                 <div class="hotel-info">
                     <span class="title">
-                        南京中心大酒店
+                        {{hotelInfo.name}}
                     </span>
                     <span class="star">
-                        ❤ ❤ ❤ ❤ ❤
+                        <span v-for="index in 5" :key="index" :style="index <= hotelInfo.hotellevel.level?'':'color: #ccc'">❤</span>
                     </span>
                     <span>
-                        豪华型
+                        {{hotelInfo.hoteltype.name}}
                     </span>
                 </div>
+                <div class="phone">前台电话：{{hotelInfo.phone}}</div>
                 <ul class="hotel-des">
                     <li>热销推荐</li>
                     <li>2018年装修</li>
@@ -42,8 +43,8 @@
                     <div class="left">
                         <p>
                             <i class="iconfont icondingwei"></i>
-                            <strong>新街口</strong>
-                            <span>(16%用户选择)</span>
+                            <strong>{{hotelInfo.area}}</strong>
+                            <span>({{parseInt(((hotelInfo.very_good_remarks+hotelInfo.very_bad_remarks)/hotelInfo.very_good_remarks)*10)}}%用户选择)</span>
                         </p>
                         <p>中山路75号</p>
                     </div>
@@ -76,14 +77,14 @@
                 <van-tag color="#7232dd" plain>免费取消</van-tag>
             </div>
             <ul class="platform">
-                <li>
+                <li v-for="(item,index) in hotelInfo.products" :key="index">
                     <div class="left">
                         <p>
                             <img src="../assets/images/qq.png" alt="">
-                            <strong>携程</strong>
+                            <strong>{{item.name}}</strong>
                         </p>
                         <p>
-                            <span class="onsale">含餐 免费取消</span><span>大床房</span>
+                            <span class="onsale">含餐 免费取消</span><span>{{item.bestType}}</span>
                         </p>
                         <p>
                             <span class="onsale">立即确认</span><span>在线付</span>
@@ -91,7 +92,7 @@
                     </div>
                     <div class="right">
                         <span class="rmb">&yen;</span>
-                        <span class="price">497</span>/晚
+                        <span class="price">{{item.price}}</span>/晚
                     </div>
                 </li>
             </ul>
@@ -111,20 +112,22 @@
                 </div>
                 <div>
                     <p class="subtitle">开业</p>
-                    <p>2010年</p>
+                    <p>{{hotelInfo.creation_time}}</p>
+                </div>
+                <div>
+                    <p class="subtitle">装修</p>
+                    <p>{{hotelInfo.renovat_time}}</p>
                 </div>
                 <div>
                     <p class="subtitle">酒店规模</p>
-                    <p>100间</p>
+                    <p>{{hotelInfo.roomCount}}间</p>
                 </div>
             </div>
             <div class="service">
-                <p class="subtitle">入住</p>
+                <p class="subtitle">酒店设施/服务</p>
                 <ul>
-                    <li>外币兑换服务</li>
-                    <li>电梯</li>
-                    <li>洗衣服务</li>
-                    <li>热水壶</li>
+                    <li v-for="(item,index) in hotelInfo.hotelassets" :key="index">{{item.name}}</li>
+
                 </ul>
             </div>
         </div>
@@ -167,7 +170,7 @@ export default {
 <style lang="less" scoped>
 @xy-color: #409eff;
 .hotelDetail{
-    padding: 60px 0 0 ;
+    padding: 60px 0 ;
     header{
         width: 100%;
         height: 50px;
@@ -176,11 +179,13 @@ export default {
         left: 0;
         background-color: #fff;
         padding: 0 10px;
+        z-index: 99;
+        border-bottom: 1px solid #eee;
         .left{
             position: absolute;
             font-weight: 600;
             color: @xy-color;
-            top: 5px;
+            top: 10px;
             left: 10px;
         }
         .logo{
@@ -192,7 +197,7 @@ export default {
         }
     }
     // container
-    .container{
+    >.container{
         padding: 0 10px;
         .pics{
             border-radius: 10px;
@@ -229,6 +234,9 @@ export default {
                 }
 
             }
+        }
+        .phone{
+            font-size: 14px;
         }
         .hotel-des{
             font-size: 12px;
@@ -284,6 +292,7 @@ export default {
         background-color: #f6f7f9;
         border-top: 6px solid #f6f7f9;
         padding-top: 14px;
+        padding-bottom: 10px;
         .checkin{
             display: flex;
             justify-content: space-between;
@@ -315,6 +324,7 @@ export default {
                 overflow: hidden;
                 background-color: #fff;
                 padding: 12px 10px;
+                margin-bottom: 10px;
                 .left{
                     p:first-child{
                         strong{
@@ -336,6 +346,7 @@ export default {
                 }
                 .right{
                     color: #666;
+                    padding-top: 13px;
                     .price,.rmb{
                         font-size: 30px;
                         color: red;
@@ -347,6 +358,80 @@ export default {
                     }
                 }
             }
+        }
+    }
+    .strategy{
+        padding: 0 16px;
+        .title{
+            padding: 6px 0 12px;
+            font-size: 18px;
+            font-weight: 600;
+        }
+        .subtitle{
+            font-size: 12px;
+            color: #888;
+        }
+        .container{
+            display: flex;
+            flex-wrap: wrap;
+            line-height: 24px;
+            >div{
+                flex: 50%;
+                padding: 4px 0;
+            }
+            p:last-child{
+                font-size: 16px;
+                font-weight: 600;
+            }
+        }
+        .service{
+            margin-top: 14px;
+            ul{
+                display: flex;
+                justify-content: space-between;
+                margin-top: 12px;
+                li{
+                    border: 1px solid #ccc;
+                    border-radius: 4px;
+                    font-size: 12px;
+                    padding: 20px 0;
+                    width: 23%;
+                    text-align: center;
+                }
+            }
+        }
+    }
+    footer{
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        background: #fff;
+        width: 100%;
+        height: 50px;
+        display: flex;
+        box-shadow: 0 -2px 4px #eee;
+        padding: 6px 16px;
+        .left{
+            flex: 1;
+            font-size: 12px;
+            color: #888;
+            span{
+                font-size: 20px;
+                color: #f00;
+                font-weight: 600;
+                &:first-child{
+                    font-size: 14px;
+                }
+            }
+        }
+        .right{
+            flex: 1;
+            border: 0;
+            outline: 0;
+            background-color: @xy-color;
+            color: #fff;
+            font-size: 16px;
+            border-radius: 19px;
         }
     }
 }
