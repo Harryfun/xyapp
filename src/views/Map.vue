@@ -89,6 +89,7 @@ export default {
     this.center = [this.location.longitude, this.location.latitude]
     this.marker.position = this.center
     this.mywindow.position = this.center
+    this.mywindow.content = this.name
   }
 }
 </script>
