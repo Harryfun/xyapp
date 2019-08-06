@@ -2,7 +2,7 @@
     <div class="hotelDetail">
         <header>
             <div class="left">
-                <i class="iconfont iconfanhui1"></i>
+                <i class="iconfont iconfanhui1" @click="$router.back(-1)"></i>
             </div>
             <div class="logo">
                 <img src="../assets/images/logo.jpg" alt="">
@@ -10,14 +10,14 @@
         </header>
         <div class="container">
              <ul class="pics">
-                <li>
-                    <img src="../assets/images/pic_sea.jpeg" alt="">
+                <li @click="showGal">
+                    <img src="../assets/images/hotel-pics/1.jpeg" alt="">
                 </li>
                 <li>
-                    <img src="../assets/images/pic_sea.jpeg" alt="">
+                    <img src="../assets/images/hotel-pics/2.jpeg" alt="">
                 </li>
                 <li>
-                    <img src="../assets/images/pic_sea.jpeg" alt="">
+                    <img src="../assets/images/hotel-pics/3.jpeg" alt="">
                 </li>
             </ul>
             <div class="hotel-title">
@@ -26,7 +26,7 @@
                         {{hotelInfo.name}}
                     </span>
                     <span class="star">
-                        <span v-for="index in 5" :key="index" :style="index <= hotelInfo.hotellevel.level?'':'color: #ccc'">❤</span>
+                        <span v-for="index in 5" :key="index" :style="index <= hotelInfo.hotellevel?hotelInfo.hotellevel.level:5?'':'color: #ccc'">❤</span>
                     </span>
                     <span>
                         {{hotelInfo.hoteltype.name}}
@@ -46,11 +46,11 @@
                             <strong>{{hotelInfo.area}}</strong>
                             <span>({{parseInt(((hotelInfo.very_good_remarks+hotelInfo.very_bad_remarks)/hotelInfo.very_good_remarks)*10)}}%用户选择)</span>
                         </p>
-                        <p>中山路75号</p>
+                        <p>{{hotelInfo.address}}</p>
                     </div>
                     <div class="right">
-                        <div class="map">
-                            周边
+                        <div class="map" @click="toMap">
+                            地图
                         </div>
                     </div>
                 </div>
@@ -112,11 +112,11 @@
                 </div>
                 <div>
                     <p class="subtitle">开业</p>
-                    <p>{{hotelInfo.creation_time}}</p>
+                    <p>{{hotelInfo.creation_time !='null' ? hotelInfo.creation_time : '2008年'}}</p>
                 </div>
                 <div>
                     <p class="subtitle">装修</p>
-                    <p>{{hotelInfo.renovat_time}}</p>
+                    <p>{{hotelInfo.renovat_time !='null' ? hotelInfo.renovat_time : '2018年'}}</p>
                 </div>
                 <div>
                     <p class="subtitle">酒店规模</p>
@@ -126,15 +126,14 @@
             <div class="service">
                 <p class="subtitle">酒店设施/服务</p>
                 <ul>
-                    <li v-for="(item,index) in hotelInfo.hotelassets" :key="index">{{item.name}}</li>
-
+                    <li v-for="(item,index) in hotelInfo.hotelassets" :key="index" v-show="index<4">{{item.name}}</li>
                 </ul>
             </div>
         </div>
         <footer>
             <div class="left">
                 <p class="title">每晚</p>
-                <p class="price"><span style="color: red">&yen;</span><span>497</span>起</p>
+                <p class="price"><span style="color: red">&yen;</span><span style="padding-right: 4px;">{{hotelInfo.price}}</span>起</p>
             </div>
             <button class="right">
                 查看房型
@@ -145,11 +144,16 @@
 
 <script>
 import { mapState } from 'vuex'
+import { ImagePreview } from 'vant'
 export default {
   name: 'hotelDetail',
   data () {
     return {
-
+      imgList: [
+        'https://p3-q.mafengwo.net/s11/M00/6C/A2/wKgBEFtqoNSAMF8BAAV_eVg4XCI21.jpeg?imageMogr2%2Fthumbnail%2F1125x%2Fquality%2F90',
+        'https://n1-q.mafengwo.net/s11/M00/6C/A1/wKgBEFtqoNOAAfrLAAPUMdHs01M69.jpeg?imageMogr2%2Fthumbnail%2F1125x%2Fquality%2F90',
+        'https://n2-q.mafengwo.net/s9/M00/F2/CD/wKgBs1ZG15qAe1HIAACzEx2uPZM14.jpeg?imageMogr2%2Fthumbnail%2F1125x%2Fquality%2F90'
+      ]
     }
   },
   computed: {
@@ -157,6 +161,19 @@ export default {
 
   },
   methods: {
+    //   展示预览图
+    showGal () {
+      ImagePreview(this.imgList)
+    },
+    toMap () {
+      this.$router.push({
+        name: 'map',
+        params: {
+          location: this.hotelInfo.location,
+          name: this.hotelInfo.name
+        }
+      })
+    },
     init () {
       console.log(this.hotelInfo)
     }
@@ -185,7 +202,7 @@ export default {
             position: absolute;
             font-weight: 600;
             color: @xy-color;
-            top: 10px;
+            top: 8px;
             left: 10px;
         }
         .logo{
@@ -409,7 +426,7 @@ export default {
         width: 100%;
         height: 50px;
         display: flex;
-        box-shadow: 0 -2px 4px #eee;
+        box-shadow: 0 -2px 4px #ccc;
         padding: 6px 16px;
         .left{
             flex: 1;

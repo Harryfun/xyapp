@@ -1,7 +1,9 @@
 <template>
     <div class="xyheader">
      <header>
-        <div class="logo" @click="toIndex"></div>
+        <slot>
+          <div class="logo" @click="toIndex"></div>
+        </slot>
         <div class="header-right">
             <router-link to="/">官网首页</router-link>
             <i class="iconfont iconsousuo"></i>

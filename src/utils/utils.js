@@ -15,3 +15,7 @@ export const formatDate = (date) => {
   d = d < 10 ? ('0' + d) : d
   return y + '-' + m + '-' + d
 }
+// 检验本地存储中是否有值，没有就赋值空null
+export const checkLoc = (key) => {
+  return localStorage[key] ? JSON.parse(localStorage[key]) : null
+}

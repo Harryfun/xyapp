@@ -8,6 +8,7 @@ import 'amfe-flexible/index.js'
 // 按需引入vant组件
 import { Tab, Tabs, Field, Divider, Notify, Swipe, SwipeItem, Lazyload, Grid, GridItem, Cell, CellGroup, List, Step, Steps, DatetimePicker, Button, IndexBar, IndexAnchor, Popup, Picker, CouponCell, CouponList, Tag } from 'vant'
 import axios from 'axios'
+import AMap from 'vue-amap'
 
 Vue.use(Tab)
   .use(Tabs)
@@ -50,6 +51,9 @@ axios.interceptors.response.use(function (config) {
   }, 1000)
   return config
 })
+
+Vue.use(AMap)
+
 Vue.config.productionTip = false
 
 new Vue({

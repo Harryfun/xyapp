@@ -1,15 +1,15 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-
+import { checkLoc } from '@/utils/utils'
 Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    userToken: localStorage.userToken ? JSON.parse(localStorage.userToken) : '',
-    userInfo: localStorage.userInfo ? JSON.parse(localStorage.userInfo) : '',
+    userToken: checkLoc('userToken'),
+    userInfo: checkLoc('userInfo'),
     loadShow: false,
-    dateInfo: {},
-    hotelInfo: {}
+    dateInfo: checkLoc('dateInfo'),
+    hotelInfo: checkLoc('hotelInfo')
 
   },
   mutations: {
@@ -24,9 +24,11 @@ export default new Vuex.Store({
     },
     SAVE_DATE (state, item) {
       state.dateInfo = item
+      localStorage.dateInfo = JSON.stringify(item)
     },
     SAVE_HOTEL (state, item) {
       state.hotelInfo = item
+      localStorage.hotelInfo = JSON.stringify(item)
     }
   },
   actions: {
