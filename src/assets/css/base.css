@@ -23,3 +23,7 @@ body{
 html,body,#app{
     height: 100%;
 }
+button{
+    outline: 0;
+    border: 0;
+}

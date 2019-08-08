@@ -40,7 +40,7 @@
             </router-link>
           </li>
           <li>
-            <router-link to="/airTic">
+            <router-link to="/air/search">
               <div class="icon"></div>
               <span>机票</span>
             </router-link>

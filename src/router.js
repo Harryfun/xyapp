@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Home from './views/Home.vue'
 import Map from './views/Map.vue'
+import Air from './views/Air.vue'
 Vue.use(Router)
 
 export default new Router({
@@ -52,6 +53,27 @@ export default new Router({
       path: '/map',
       name: 'map',
       component: Map
+    }, {
+      path: '/air',
+      name: 'air',
+      component: Air,
+      children: [
+        {
+          path: 'search',
+          name: 'airSearch',
+          component: () => import('./views/AirSearch.vue')
+        },
+        {
+          path: 'list',
+          name: 'airList',
+          component: () => import('./views/AirList.vue')
+        },
+        {
+          path: 'order',
+          name: 'airOrder',
+          component: () => import('./views/AirOrder.vue')
+        }
+      ]
     }
   ]
 })

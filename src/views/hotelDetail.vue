@@ -135,7 +135,7 @@
                 <p class="title">每晚</p>
                 <p class="price"><span style="color: red">&yen;</span><span style="padding-right: 4px;">{{hotelInfo.price}}</span>起</p>
             </div>
-            <button class="right">
+            <button class="right" @click="showToast">
                 查看房型
             </button>
         </footer>
@@ -173,6 +173,9 @@ export default {
           name: this.hotelInfo.name
         }
       })
+    },
+    showToast () {
+      this.$toast('更多功能请到闲云app客户端体验')
     },
     init () {
       console.log(this.hotelInfo)

@@ -9,7 +9,8 @@ export default new Vuex.Store({
     userInfo: checkLoc('userInfo'),
     loadShow: false,
     dateInfo: checkLoc('dateInfo'),
-    hotelInfo: checkLoc('hotelInfo')
+    hotelInfo: checkLoc('hotelInfo'),
+    airInfo: checkLoc('airInfo')
 
   },
   mutations: {
@@ -29,6 +30,10 @@ export default new Vuex.Store({
     SAVE_HOTEL (state, item) {
       state.hotelInfo = item
       localStorage.hotelInfo = JSON.stringify(item)
+    },
+    SAVE_AIR (state, item) {
+      state.airInfo = item
+      localStorage.airInfo = JSON.stringify(item)
     }
   },
   actions: {

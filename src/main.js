@@ -6,7 +6,7 @@ import store from './store'
 // 引入flexible适配 会自动加上viewport
 import 'amfe-flexible/index.js'
 // 按需引入vant组件
-import { Tab, Tabs, Field, Divider, Notify, Swipe, SwipeItem, Lazyload, Grid, GridItem, Cell, CellGroup, List, Step, Steps, DatetimePicker, Button, IndexBar, IndexAnchor, Popup, Picker, CouponCell, CouponList, Tag } from 'vant'
+import { Tab, Tabs, Field, Divider, Notify, Swipe, SwipeItem, Lazyload, Grid, GridItem, Cell, CellGroup, List, Step, Steps, DatetimePicker, Button, IndexBar, IndexAnchor, Popup, Picker, CouponCell, CouponList, Tag, Toast } from 'vant'
 import axios from 'axios'
 import AMap from 'vue-amap'
 
@@ -34,6 +34,7 @@ Vue.use(Tab)
   .use(CouponCell)
   .use(CouponList)
   .use(Tag)
+  .use(Toast)
 axios.defaults.baseURL = 'http://127.0.0.1:1337/'
 
 // 拦截器设置loading

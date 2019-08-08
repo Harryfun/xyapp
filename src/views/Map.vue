@@ -11,7 +11,7 @@
     </div>
 </template>
 
-<style>
+<style scoped>
     .iconfont{
         font-weight: 600;
         margin-left: 20px;
