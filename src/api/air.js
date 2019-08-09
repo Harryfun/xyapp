@@ -6,3 +6,9 @@ export const getCity = (data) => {
     params: data
   })
 }
+// 查询城市信息
+export const getAirList = (data) => {
+  return axios.get('/airs', {
+    params: data
+  })
+}

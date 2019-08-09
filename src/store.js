@@ -10,8 +10,8 @@ export default new Vuex.Store({
     loadShow: false,
     dateInfo: checkLoc('dateInfo'),
     hotelInfo: checkLoc('hotelInfo'),
-    airInfo: checkLoc('airInfo')
-
+    airInfo: checkLoc('airInfo'),
+    airOrder: checkLoc('airOrder')
   },
   mutations: {
     // 存储用户信息
@@ -34,6 +34,10 @@ export default new Vuex.Store({
     SAVE_AIR (state, item) {
       state.airInfo = item
       localStorage.airInfo = JSON.stringify(item)
+    },
+    SAVE_AIR_ORDER (state, item) {
+      state.airOrder = item
+      localStorage.airOrder = JSON.stringify(item)
     }
   },
   actions: {

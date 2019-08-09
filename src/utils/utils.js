@@ -15,6 +15,13 @@ export const formatDate = (date) => {
   d = d < 10 ? ('0' + d) : d
   return y + '-' + m + '-' + d
 }
+export const getDate = (date) => {
+  let m = date.getMonth() + 1
+  m = m < 10 ? '0' + m : m
+  let d = date.getDate()
+  d = d < 10 ? ('0' + d) : d
+  return m + '月' + d + '日'
+}
 // 检验本地存储中是否有值，没有就赋值空null
 export const checkLoc = (key) => {
   return localStorage[key] ? JSON.parse(localStorage[key]) : null

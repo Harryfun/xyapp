@@ -5,8 +5,23 @@ airOrder
 </template>
 
 <script>
+import { mapState } from 'vuex'
 export default {
-  name: 'airOrder'
+  name: 'airOrder',
+  computed: {
+    ...mapState(['airOrder'])
+  },
+  data () {
+    return {
+
+    }
+  },
+  methods: {
+
+  },
+  mounted () {
+    console.log(this.airOrder)
+  }
 }
 </script>
 
