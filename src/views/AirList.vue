@@ -1,10 +1,6 @@
 <template>
     <div class="airList">
-      <header>
-        <i class="iconfont iconfanhui1"></i>
-        北京<i class="iconfont iconchufadaodaxiao"></i>
-        曼谷
-      </header>
+      <Airheader :come="airInfo.departCity" :go="airInfo.destCity"></Airheader>
       <van-tabs sticky :active='2' @click="changeList">
         <!-- 航班起降时间均为当地时间 -->
         <div class="tips">
@@ -67,7 +63,8 @@
 import { mapState, mapMutations } from 'vuex'
 import { getAirList } from '@/api/air'
 import { getDate, getRandom, formatDate } from '@/utils/utils'
-
+import { setTimeout } from 'timers'
+import Airheader from '@/components/AirHeader.vue'
 export default {
   name: 'airList',
   data () {
@@ -78,8 +75,11 @@ export default {
     }
   },
   computed: {
-    ...mapState(['airInfo'])
+    ...mapState(['airInfo', 'userToken', 'userInfo'])
 
+  },
+  components: {
+    Airheader
   },
   methods: {
     // 获取机票列表
@@ -113,8 +113,19 @@ export default {
     ...mapMutations(['SAVE_AIR_ORDER']),
     // 跳转订单页面
     toOrder (item) {
-      this.SAVE_AIR_ORDER(item)
-      this.$router.push({ name: 'airOrder' })
+      // 先判断用户是否登录 如果没登录就跳转登录页
+      console.log(this.airInfo)
+      console.log(this.userToken)
+      console.log(this.userInfo)
+      if (this.userToken && this.userInfo) {
+        this.SAVE_AIR_ORDER(item)
+        this.$router.push({ name: 'airOrder' })
+      } else {
+        this.$toast('下单之前请先登录哦~')
+        setTimeout(() => {
+          this.$router.push({ name: 'login', params: { air: true } })
+        }, 1000)
+      }
     },
     init () {
       console.log(this.airInfo)
@@ -133,23 +144,7 @@ export default {
   .airList{
     // padding: 10px 0 80px;
   }
-  header{
-    background-color: @xy-color;
-    font-size: 16px;
-    color: #fff;
-    height: 50px;
-    text-align: center;
-    line-height: 50px;
-    position: relative;
-    i.iconfanhui1{
-      position: absolute;
-      top: 0px;
-      left: 10px;
-    }
-    i.iconchufadaodaxiao{
-      padding: 0 8px 0 10px;
-    }
-  }
+
   /deep/.van-tabs__nav{
     background-color: @xy-color;
     padding: 10px 0;

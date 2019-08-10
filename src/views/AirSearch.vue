@@ -242,6 +242,7 @@ export default {
   .addr{
     display: flex;
     justify-content: space-between;
+    font-size: 22px;
     align-items: center;
     font-weight: 600;
     color: #333;

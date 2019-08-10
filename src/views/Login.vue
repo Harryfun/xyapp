@@ -121,18 +121,26 @@ export default {
         })
     },
     login () {
+      let jumpName = '首页'
+      let pathName = 'home'
       login(this.loginData)
         .then(res => {
           setLocal('userInfo', res.data.user)
           setLocal('userToken', res.data.token)
           this.changeToken({ userInfo: res.data.user, userToken: res.data.token })
+          console.log(this.$route.params.air)
+          // 判断如果是从air过来的，则直接跳到airOrder页面
+          if (this.$route.params.air === true) {
+            jumpName = '机票下单页'
+            pathName = 'airOrder'
+          }
           this.$notify({
-            message: `欢迎您${res.data.user.nickname},1s后将跳转首页`,
+            message: `欢迎您${res.data.user.nickname},1s后将跳转${jumpName}`,
             duration: 2000,
             background: '#409eff'
           })
           setTimeout(() => {
-            this.$router.push({ name: 'home' })
+            this.$router.push({ name: pathName })
           }, 1000)
         })
         .catch(err => {
