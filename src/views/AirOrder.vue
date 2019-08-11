@@ -99,6 +99,10 @@
           v-model="qrshow"
           title="长按保存二维码识别支付"
           show-cancel-button
+          cancel-button-text="残忍离开"
+          confirm-button-text="我已支付"
+          @confirm="toIndex"
+          @cancel="shutDialog"
         >
           <Qrcode :code_url="code_url"></Qrcode>
         </van-dialog>
@@ -110,7 +114,7 @@ import { mapState } from 'vuex'
 import Airheader from '@/components/AirHeader.vue'
 import Qrcode from '@/components/qrcode.vue'
 import { getCode } from '@/api/login'
-import { postAirOrders } from '@/api/air'
+import { postAirOrders, payOrder } from '@/api/air'
 import { Dialog } from 'vant'
 export default {
   name: 'airOrder',
@@ -151,7 +155,13 @@ export default {
           info: '航空延误险: ￥30/份 最高赔付1000元'
         }
       ],
-      insurances: []
+      insurances: [],
+      // 查询订单支付条件
+      checkInfo: {},
+      // 付款定时器
+      timer: null,
+      // 支付状态
+      payStatus: false
     }
   },
   methods: {
@@ -171,6 +181,20 @@ export default {
         this.$toast(`您的验证码是${res.data.code}`)
       })
     },
+    // 查询用户是否成功付款
+    isPay () {
+      return payOrder(this.checkInfo, this.userToken).then(res => {
+        const { statusTxt } = res.data
+
+        if (statusTxt === '支付完成') {
+          return true
+        } else {
+          return false
+        }
+      }).catch(err => {
+        console.error(err)
+      })
+    },
     pay () {
       let data = { ...this.contactPerson }
       data.air = this.airOrder.id
@@ -179,13 +203,55 @@ export default {
       data.seat_xid = this.airOrder.seat_infos[0].seat_xid
       data.users = [ ...this.users ]
       postAirOrders(data, this.userToken).then(res => {
+        this.checkInfo.nonce_str = res.data.data.price
+        this.checkInfo.id = res.data.data.id
+        this.checkInfo.out_trade_no = res.data.data.payInfo.order_no
         // 显示二维码
         this.qrshow = true
         this.code_url = res.data.data.payInfo.code_url
+        // 调用付款状态的查询
+        this.timer = setInterval(async () => {
+          this.payStatus = await this.isPay()
+          if (this.payStatus) {
+            clearInterval(this.timer)
+            this.timer = null
+            this.$toast('您已成功支付，订单会稍后已短信的形式发送到您的手机，2s后跳转至首页')
+            setTimeout(() => {
+              this.$router.push({ name: 'home' })
+            }, 2500)
+          }
+        }, 3000)
       }).catch(err => {
         console.log(err)
       })
+    },
+    // 确认支付操作
+    toIndex () {
+      if (this.payStatus) {
+        this.qrshow = false
+        this.$toast('您已成功支付，订单会稍后已短信的形式发送到您的手机，2s后跳转至首页')
+        setTimeout(() => {
+          this.$router.push({ name: 'home' })
+        }, 1500)
+      } else {
+        this.qrshow = false
+        this.$toast('支付遇到问题？请联系客服')
+        clearInterval(this.timer)
+        this.timer = null
+      }
+    },
+    shutDialog () {
+      clearInterval(this.timer)
+      this.timer = null
+      this.qrshow = false
+      this.$toast('该航线十分火爆，欲购速从哦~')
+      clearInterval(this.timer)
+      this.timer = null
     }
+  },
+  beforeDestroy () {
+    clearInterval(this.timer)
+    this.timer = null
   },
   mounted () {
     console.log(this.airOrder)

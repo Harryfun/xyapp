@@ -27,3 +27,10 @@ export const postAirOrders = (data, token) => {
 //     Authorization: `Bearer ${token}`
 //   } })
 // }
+
+// 查询付款状态
+export const payOrder = (data, token) => {
+  return axios.post('/airorders/checkpay', data, { headers: {
+    Authorization: `Bearer ${token}`
+  } })
+}
