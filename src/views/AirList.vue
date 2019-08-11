@@ -143,6 +143,7 @@ export default {
   @xy-color: #409eff;
   .airList{
     // padding: 10px 0 80px;
+    padding-top: 50px;
   }
 
   /deep/.van-tabs__nav{
@@ -184,7 +185,7 @@ export default {
     box-shadow: 0px 3px 3px rgba(110, 110, 110, 0.3);
   }
   .tips{
-    background-color: rgb(246, 246, 246);
+    // background-color: rgb(246, 246, 246);
     p:first-child{
       font-size: 16px;
       padding: 10px;

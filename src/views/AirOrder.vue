@@ -4,11 +4,11 @@
         <div class="airInfo">
           <div class="item">
             <div class="date line">
-              <p>08月14日 周三 06:45</p>
-              <p>首都机场-白云机场 经济舱</p>
+              <p>08月14日 周三 {{airOrder.dep_time}}</p>
+              <p>{{airOrder.org_airport_name}}{{airOrder.org_airport_quay}} - {{airOrder.dst_airport_name}}{{airOrder.dst_airport_quay}}    {{airOrder.seat_infos[0].group_name}}</p>
             </div>
             <div class="price">
-              <p><span class="money"><span>&yen;</span>1205</span>/成人</p>
+              <p><span class="money"><span>&yen;</span>{{airOrder.seat_infos[0].par_price}}</span>/成人</p>
               <p>退改签规则和行李额说明</p>
             </div>
           </div>
@@ -58,7 +58,7 @@
                     required
                     placeholder="请输入短信验证码"
                   >
-                    <van-button slot="button" size="small" type="primary">发送验证码</van-button>
+                    <van-button slot="button" size="small" class="yzm" @click="getCode">发送验证码</van-button>
                   </van-field>
               </van-cell-group>
               <div class="tips">
@@ -88,33 +88,51 @@
           <footer>
             <div class="left">
               <p>订单总额</p>
-              <p><span class="rmb">￥</span>0</p>
+              <p><span class="rmb">￥</span>{{totalPrice}}</p>
             </div>
-            <button>
+            <button @click="pay">
               提交订单
             </button>
           </footer>
         </div>
+        <van-dialog
+          v-model="qrshow"
+          title="长按保存二维码识别支付"
+          show-cancel-button
+        >
+          <Qrcode :code_url="code_url"></Qrcode>
+        </van-dialog>
     </div>
 </template>
 
 <script>
 import { mapState } from 'vuex'
 import Airheader from '@/components/AirHeader.vue'
-
+import Qrcode from '@/components/qrcode.vue'
+import { getCode } from '@/api/login'
+import { postAirOrders } from '@/api/air'
+import { Dialog } from 'vant'
 export default {
   name: 'airOrder',
   computed: {
-    ...mapState(['airOrder'])
+    ...mapState(['airOrder', 'userToken']),
+    totalPrice () {
+      return this.users.length * this.airOrder.seat_infos[0].par_price + this.insurances.length * 30 * this.users.length
+    }
   },
   components: {
-    Airheader
+    Airheader,
+    Qrcode,
+    [Dialog.Component.name]: Dialog.Component
   },
   data () {
     return {
+      qrshow: false,
+      // 二维码图
+      code_url: '',
       users: [{
-        username: '',
-        id: '',
+        username: '11',
+        id: '11',
         idType: 1
       }],
       // 联系人信息
@@ -140,13 +158,33 @@ export default {
     // 添加乘机人
     addUser () {
       this.users.push({
-        username: '',
-        id: '',
+        username: '1',
+        id: '1',
         idType: 1
       })
     },
     toggle (index) {
       this.$refs.checkboxes[index].toggle()
+    },
+    getCode () {
+      getCode({ tel: this.contactPerson.contactPhone }).then(res => {
+        this.$toast(`您的验证码是${res.data.code}`)
+      })
+    },
+    pay () {
+      let data = { ...this.contactPerson }
+      data.air = this.airOrder.id
+      data.insurances = [...this.insurances]
+      data.invoice = false
+      data.seat_xid = this.airOrder.seat_infos[0].seat_xid
+      data.users = [ ...this.users ]
+      postAirOrders(data, this.userToken).then(res => {
+        // 显示二维码
+        this.qrshow = true
+        this.code_url = res.data.data.payInfo.code_url
+      }).catch(err => {
+        console.log(err)
+      })
     }
   },
   mounted () {
@@ -232,6 +270,9 @@ export default {
     font-size: 12px;
     font-weight: 600;
     color: #888;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
     i{
       font-size: 30px;
       color: @xy-color;
@@ -270,4 +311,16 @@ export default {
       line-height: 40px;
     }
   }
+  .yzm{
+    background-color: @xy-color;
+    color: #fff;
+    border-radius: 8px;
+    height: 37px;
+    line-height: 37px;
+    padding: 0 10px;
+  }
+  // 对话框
+  // /deep/.van-dialog{
+  //   height: 50vh;
+  // }
 </style>
