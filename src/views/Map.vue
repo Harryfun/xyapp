@@ -12,20 +12,21 @@
 </template>
 
 <style scoped>
-    .iconfont{
+  .iconfont{
         font-weight: 600;
         margin-left: 20px;
     }
-  .amap-page-container {
+ .amap-page-container {
     height: 100%;
   }
-  .amap-info-content.amap-info-outer{
+  /deep/.amap-info-content.amap-info-outer{
       font-size: 16px;
-      padding: 10px 18px 10px 12px;
+      padding: 10px 20px 10px 12px;
   }
-  .amap-info-contentContainer{
+  /deep/.amap-info-contentContainer{
       transform: translate(15px,-16px)
   }
+
 </style>
 
 <script>

@@ -414,8 +414,12 @@ export default {
                     border: 1px solid #ccc;
                     border-radius: 4px;
                     font-size: 12px;
-                    padding: 20px 0;
                     width: 23%;
+                    height: 60px;
+                    line-height: 60px;
+                    overflow: hidden;
+                    text-overflow:ellipsis;
+                    white-space: nowrap;
                     text-align: center;
                 }
             }

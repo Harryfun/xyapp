@@ -294,7 +294,7 @@ export default {
   font-size: 12px;
   text-align: center;
   .title{
-    width: 56px;
+    width: 70px;
     margin: 0 auto;
     background-color: @xy-color;
     color: #fff;

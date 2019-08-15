@@ -11,7 +11,7 @@ export default {
 </script>
 
 <style scoped lang="less">
-  .air{
+  .air {
     height: 100%;
   }
 </style>

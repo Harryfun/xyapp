@@ -1,6 +1,7 @@
 <template>
     <div class="airList">
-      <Airheader :come="airInfo.departCity" :go="airInfo.destCity"></Airheader>
+      <Airheader :come="airInfo.departCity" :go="airInfo.destCity" :address="'airSearch'"></Airheader>
+      <Loading></Loading>
       <van-tabs sticky :active='2' @click="changeList">
         <!-- 航班起降时间均为当地时间 -->
         <div class="tips">
@@ -65,6 +66,7 @@ import { getAirList } from '@/api/air'
 import { getDate, getRandom, formatDate } from '@/utils/utils'
 import { setTimeout } from 'timers'
 import Airheader from '@/components/AirHeader.vue'
+import Loading from '@/components/Loading.vue'
 export default {
   name: 'airList',
   data () {
@@ -79,7 +81,8 @@ export default {
 
   },
   components: {
-    Airheader
+    Airheader,
+    Loading
   },
   methods: {
     // 获取机票列表
@@ -272,6 +275,7 @@ export default {
     align-items: center;
     padding: 10px 0;
     box-shadow: 0px 6px 16px rgba(0,0,0,.2);
+    z-index: 2;
     >div{
       font-weight: 600;
       text-align: center;

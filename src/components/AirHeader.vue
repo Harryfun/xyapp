@@ -1,7 +1,7 @@
 <template>
     <div class="air-header">
         <header>
-        <i class="iconfont iconfanhui1" @click="$router.push({name:'airList'})"></i>
+        <i class="iconfont iconfanhui1" @click="$router.push({name:address})"></i>
             {{come}}
         <i class="iconfont iconchufadaodaxiao"></i>
             {{go}}
@@ -18,6 +18,11 @@ export default {
       required: true
     },
     go: {
+      type: String,
+      required: true
+    },
+    // 返回上一页的地址
+    address: {
       type: String,
       required: true
     }

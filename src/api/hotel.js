@@ -16,3 +16,7 @@ export const getHotelList = (data) => {
     params: data
   })
 }
+// 获取酒店选项列表
+export const getOptions = () => {
+  return axios.get('/hotels/options')
+}

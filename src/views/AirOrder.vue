@@ -1,6 +1,6 @@
 <template>
     <div class="airOrder">
-        <Airheader :come="airOrder.org_city_name" :go="airOrder.dst_city_name"></Airheader>
+        <Airheader :come="airOrder.org_city_name" :go="airOrder.dst_city_name" :address="'airList'"></Airheader>
         <div class="airInfo">
           <div class="item">
             <div class="date line">
@@ -222,7 +222,11 @@ export default {
           }
         }, 3000)
       }).catch(err => {
-        console.log(err)
+        this.$notify({
+          message: err.response.data.message,
+          duration: 2000,
+          background: '#dc2727'
+        })
       })
     },
     // 确认支付操作

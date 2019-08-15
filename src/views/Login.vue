@@ -144,12 +144,12 @@ export default {
           }, 1000)
         })
         .catch(err => {
-          console.dir(err)
-          // this.$notify({
-          //   message: err.response.data.message,
-          //   duration: 2000,
-          //   background: '#dc2727'
-          // })
+          this.$store.commit('changeload', false)
+          this.$notify({
+            message: err.response.data.message,
+            duration: 2000,
+            background: '#dc2727'
+          })
         })
     },
     changetab (dom) {

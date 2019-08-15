@@ -27,6 +27,7 @@ export default {
         bottom: 0;
         right: 0;
         background-color: rgba(107, 195, 211, 0.2);
+        z-index: 999;
         img{
             position: absolute;
             top: 45%;

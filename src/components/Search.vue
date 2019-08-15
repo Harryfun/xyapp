@@ -44,7 +44,7 @@ export default {
       -webkit-font-smoothing: antialiased;
     }
     input{
-      width: 326px;
+      width: 320px;
       height: 30px;
       background: #ececec;
       border: 0;

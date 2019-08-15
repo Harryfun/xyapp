@@ -16,7 +16,7 @@
             <p class="sub-title">目的地</p>
             <div @click="cityShow = true" :class="{active:addressAc}">{{address}}</div>
           </div>
-          <div class="right">
+          <div class="right" @click="getCurrentCity">
             <img src="../assets/images/geo.png" alt="">
             <p>我的位置</p>
           </div>
@@ -249,6 +249,12 @@ export default {
       this.leaveDate = text
 
       this.personData = '2成人,0儿童'
+    },
+    // 获取当前地址
+    getCurrentCity () {
+      this.address = '广州'
+      // 替换初始的placeholder样式
+      this.addressAc = true
     }
   },
 

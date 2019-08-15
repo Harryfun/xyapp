@@ -9,7 +9,8 @@
           <input type="text" placeholder="搜索游记" disabled />
           <i class="iconfont iconsousuo"></i>
         </div>
-        <span @click="login">登录</span>
+        <span @click="logout" v-if="userInfo.nickname">{{userInfo.nickname}}</span>
+        <span @click="login" v-else>登录</span>
       </header>
       <div class="banner">
         <van-swipe :autoplay="2000">
@@ -79,11 +80,11 @@
         <div class="str-list">
           <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
             <ul>
-              <li v-for="item in list " :key="item.id">
+              <li v-for="(item,index) in list " :key="item.id" @click="$router.push('/strategy/'+item.id)">
                 <div class="item-title">{{item.title}}</div>
                 <div class="item-content">
                 <div class="item-l">
-                    <img :src="item.images[0]" alt />
+                    <img :src="item.images.length === 0 ? imgData[index]: item.images[0]" alt />
                 </div>
                   <div class="item-r">
                     <p>{{item.summary}}</p>
@@ -109,6 +110,11 @@
 import Search from '@/components/Search.vue'
 import Loading from '@/components/Loading.vue'
 import { getBanners, getPosts } from '@/api/index'
+// 缺省随机图
+import imgData from '@/utils/imgData'
+// import { getRandom } from '@/utils/utils'
+import { mapState, mapMutations } from 'vuex'
+import { Dialog } from 'vant'
 export default {
   name: 'home',
   components: {
@@ -124,10 +130,15 @@ export default {
       posts: [],
       loading: false,
       finished: false,
-      showSearch: false
+      showSearch: false,
+      imgData: imgData
     }
   },
+  computed: {
+    ...mapState(['userInfo'])
+  },
   methods: {
+    ...mapMutations(['clearToken']),
     onLoad () {
       // 异步更新数据
       setTimeout(() => {
@@ -170,6 +181,22 @@ export default {
         if (res.status === 200) {
           this.posts = res.data.data
         }
+      })
+    },
+    // // 获取随机图
+    // getPic () {
+    //   return imgData[getRandom(0, 100)]
+    // },
+    // 登出操作
+    logout () {
+      Dialog.confirm({
+        title: '退出登录',
+        message: this.userInfo.nickname + ',您是否要退出当前登录用户？'
+      }).then(() => {
+        // on confirm
+        this.clearToken()
+      }).catch(() => {
+        // on cancel
       })
     },
     init () {

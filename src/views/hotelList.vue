@@ -1,8 +1,12 @@
 <template>
     <div class="hotelList">
         <Loading></Loading>
-        <header>
-            <div class="header-left">
+        <van-popup v-model="filterShow"  position="right">
+            <Hotelfilter @out="getFilter"></Hotelfilter>
+        </van-popup>
+        <div class="top">
+              <header>
+            <div class="header-left" @click="$router.back(-1)">
                 <i class="iconfont iconfanhui1"></i>
             </div>
             <div class="header-center">
@@ -20,12 +24,13 @@
                 <i class="iconfont iconpaixu"></i>
                 <span>综合排序</span>
             </div>
-            <div class="choose">
+            <div class="choose" @click="filterShow = true">
                 <i class="iconfont iconshaixuan1">
                 </i>
                 <span>筛选</span>
             </div>
         </section>
+        </div>
         <van-list
             v-model="loading"
             :finished="finished"
@@ -43,7 +48,7 @@
                     <p class="comments"><span class="lang">{{item.all_remarks}}</span>云评，<span class="lang">{{item.num_collected}}</span>游记提及</p>
                     <p class="loc">
                         <span>位于{{item.business_area}}/豪华</span>
-                        <span class="rmb"><span>&yen;490</span>起</span>
+                        <span class="rmb"><span>&yen;{{item.price}}</span>起</span>
                     </p>
                 </div>
             </li>
@@ -54,6 +59,7 @@
 
 <script>
 import Loading from '@/components/Loading.vue'
+import Hotelfilter from '@/components/Filter.vue'
 import { getHotelList } from '@/api/hotel'
 import { mapMutations } from 'vuex'
 export default {
@@ -64,15 +70,23 @@ export default {
       hotelList: [],
       total: 0,
       finished: false,
-      loading: false
+      loading: false,
+      //   筛选显示
+      filterShow: false
     }
   },
   components: {
-    Loading
+    Loading,
+    Hotelfilter
   },
   methods: {
-    getHotelList () {
+    getHotelList (data) {
       // 准备数据
+      if (data) {
+        this.hotelList = []
+        this.hotelInfo._start = -6
+        this.hotelInfo = { ...this.hotelInfo, ...data }
+      }
       this.hotelInfo._start += this.hotelInfo._limit
       getHotelList(this.hotelInfo).then(res => {
         this.hotelList.push(...res.data.data)
@@ -97,7 +111,12 @@ export default {
         { name: 'hotelDetail' }
       )
     },
-
+    getFilter (data) {
+      this.filterShow = false
+      if (data) {
+        this.getHotelList(data)
+      }
+    },
     init () {
       this.hotelInfo = this.$route.params
       this.hotelInfo._limit = 6
@@ -112,7 +131,16 @@ export default {
 
 <style lang="less" scoped>
 @xy-color: #409eff;
+.top{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: #fff;
+    z-index: 10;
+}
     .hotelList{
+        padding-top: 100px;
         header{
             font-size: 14px;
             height: 50px;
@@ -230,5 +258,9 @@ export default {
             }
         }
     }
-
+// 筛选的样式
+/deep/.van-popup--right{
+    height: 100%;
+    width: 100%;
+}
 </style>
