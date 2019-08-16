@@ -84,8 +84,13 @@ export default {
       // 准备数据
       if (data) {
         this.hotelList = []
-        this.hotelInfo._start = -6
+        this.hotelInfo = {
+          _start: -6,
+          _limit: 6
+        }
+        this.finished = false
         this.hotelInfo = { ...this.hotelInfo, ...data }
+        console.log(this.hotelInfo, '!!!!!!!!!')
       }
       this.hotelInfo._start += this.hotelInfo._limit
       getHotelList(this.hotelInfo).then(res => {
@@ -95,6 +100,7 @@ export default {
         // 加载状态结束
         this.loading = false
         // 数据全部加载完成
+        console.log(this.hotelList.length, this.total, '------------')
         if (this.hotelList.length >= this.total) {
           console.log(this.hotelList.length, this.total)
           this.finished = true
@@ -112,6 +118,7 @@ export default {
       )
     },
     getFilter (data) {
+      console.log(data, '???????????')
       this.filterShow = false
       if (data) {
         this.getHotelList(data)

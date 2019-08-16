@@ -151,7 +151,13 @@ export default {
         levels: '',
         types: ''
       }
-      this.hotelOpt.price_lt = 1000
+      this.hotelOpt = {
+        price_lt: 1000,
+        hotellevel: '',
+        hoteltype_in: '',
+        hotelasset_in: '',
+        hotelbrand_in: ''
+      }
     }
   },
   created () {

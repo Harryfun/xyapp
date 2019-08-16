@@ -113,6 +113,7 @@ export default {
           console.log(111)
         })
         .catch(err => {
+          this.$store.commit('changeload', false)
           this.$notify({
             message: err.response.data.message,
             duration: 2000,
@@ -175,7 +176,7 @@ export default {
       justify-content: center;
       align-items: center;
       > img {
-        height: 40px;
+        height: 50px;
         width: 180px;
       }
     }

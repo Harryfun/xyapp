@@ -124,6 +124,7 @@ export default {
           this.posts = [ ...res.data.data ]
           console.log(this.posts)
           this.swiperList = [ ...res.data.data ]
+          this.swiperList.length = 4
         }
       })
     },

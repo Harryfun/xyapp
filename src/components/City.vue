@@ -68,7 +68,8 @@ export default {
     top: 0px;
     z-index: 80;
     background: #fff;
-    height: 100%;
+    height: 100vh;
+    overflow: scroll;
     .title,.titleZ{
         height: 30px;
         line-height: 30px;

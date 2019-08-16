@@ -120,8 +120,9 @@ export default {
       console.log(this.airInfo)
       console.log(this.userToken)
       console.log(this.userInfo)
+
+      this.SAVE_AIR_ORDER(item)
       if (this.userToken && this.userInfo) {
-        this.SAVE_AIR_ORDER(item)
         this.$router.push({ name: 'airOrder' })
       } else {
         this.$toast('下单之前请先登录哦~')

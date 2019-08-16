@@ -9,7 +9,7 @@
           <input type="text" placeholder="搜索游记" disabled />
           <i class="iconfont iconsousuo"></i>
         </div>
-        <span @click="logout" v-if="userInfo.nickname">{{userInfo.nickname}}</span>
+        <span @click="logout" v-if="userInfo">{{userInfo.nickname}}</span>
         <span @click="login" v-else>登录</span>
       </header>
       <div class="banner">
