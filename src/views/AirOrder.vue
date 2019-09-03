@@ -114,7 +114,7 @@ import { mapState } from 'vuex'
 import Airheader from '@/components/AirHeader.vue'
 import Qrcode from '@/components/qrcode.vue'
 import { getCode } from '@/api/login'
-import { postAirOrders, payOrder } from '@/api/air'
+import { postAirOrders, payOrder, getAirOrders } from '@/api/air'
 import { Dialog } from 'vant'
 export default {
   name: 'airOrder',
@@ -258,7 +258,9 @@ export default {
     this.timer = null
   },
   mounted () {
-    console.log(this.airOrder)
+    getAirOrders(this.userToken).then(res => {
+      console.log(res, 111)
+    })
   }
 }
 </script>

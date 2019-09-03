@@ -18,13 +18,15 @@ export default new Vuex.Store({
     changeToken (state, item) {
       state.userToken = item.userToken
       state.userInfo = item.userInfo
-      localStorage.userToken = ''
-      localStorage.userInfo = ''
+      localStorage.userToken = JSON.stringify(item.userToken)
+      localStorage.userInfo = JSON.stringify(item.userInfo)
     },
     // 清除用户信息
     clearToken (state) {
       state.userToken = ''
       state.userInfo = ''
+      localStorage.userToken = ''
+      localStorage.userInfo = ''
     },
     // 更改loading状态
     changeload (state, item) {

@@ -64,7 +64,6 @@
 import { mapState, mapMutations } from 'vuex'
 import { getAirList } from '@/api/air'
 import { getDate, getRandom, formatDate } from '@/utils/utils'
-import { setTimeout } from 'timers'
 import Airheader from '@/components/AirHeader.vue'
 import Loading from '@/components/Loading.vue'
 export default {

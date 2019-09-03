@@ -74,6 +74,15 @@ export default new Router({
           component: () => import('./views/AirOrder.vue')
         }
       ]
+    }, {
+      path: '/personal',
+      name: 'personal',
+      component: () => import('./views/Personal.vue')
+    },
+    {
+      path: '/allorder',
+      name: 'allorder',
+      component: () => import('./views/AllOrder.vue')
     }
   ]
 })

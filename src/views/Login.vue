@@ -56,7 +56,6 @@
 
 <script>
 import { getCode, register, login } from '@/api/login'
-import { setLocal } from '@/utils/utils'
 import Loading from '@/components/Loading.vue'
 import { mapMutations } from 'vuex'
 export default {
@@ -126,8 +125,6 @@ export default {
       let pathName = 'home'
       login(this.loginData)
         .then(res => {
-          setLocal('userInfo', res.data.user)
-          setLocal('userToken', res.data.token)
           this.changeToken({ userInfo: res.data.user, userToken: res.data.token })
           console.log(this.$route.params.air)
           // 判断如果是从air过来的，则直接跳到airOrder页面

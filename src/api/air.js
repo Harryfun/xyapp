@@ -17,6 +17,11 @@ export const postAirOrders = (data, token) => {
     Authorization: `Bearer ${token}`
   } })
 }
+export const getAirOrders = (token) => {
+  return axios.get('/airorders', { headers: {
+    Authorization: `Bearer ${token}`
+  } })
+}
 // export const payOrder = (data, token) => {
 //   return axios.post('/airorders/pay', data, { headers: {
 //     Authorization: `Bearer ${token}`

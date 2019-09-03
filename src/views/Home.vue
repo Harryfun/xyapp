@@ -9,13 +9,14 @@
           <input type="text" placeholder="搜索游记" disabled />
           <i class="iconfont iconsousuo"></i>
         </div>
-        <span @click="logout" v-if="userInfo">{{userInfo.nickname}}</span>
+        <span @click="$router.push({name:'personal'})" v-if="userInfo">{{userInfo.nickname}}</span>
         <span @click="login" v-else>登录</span>
       </header>
       <div class="banner">
         <van-swipe :autoplay="2000">
           <van-swipe-item v-for="(value, index) in images" :key="index">
             <img v-lazy="'http://157.122.54.189:9095'+value.url" />
+            <!-- <img v-lazy="'http://localhost:1337'+value.url" /> -->
           </van-swipe-item>
         </van-swipe>
       </div>
@@ -113,8 +114,7 @@ import { getBanners, getPosts } from '@/api/index'
 // 缺省随机图
 import imgData from '@/utils/imgData'
 // import { getRandom } from '@/utils/utils'
-import { mapState, mapMutations } from 'vuex'
-import { Dialog } from 'vant'
+import { mapState } from 'vuex'
 export default {
   name: 'home',
   components: {
@@ -138,7 +138,6 @@ export default {
     ...mapState(['userInfo'])
   },
   methods: {
-    ...mapMutations(['clearToken']),
     onLoad () {
       // 异步更新数据
       setTimeout(() => {
@@ -188,17 +187,7 @@ export default {
     //   return imgData[getRandom(0, 100)]
     // },
     // 登出操作
-    logout () {
-      Dialog.confirm({
-        title: '退出登录',
-        message: this.userInfo.nickname + ',您是否要退出当前登录用户？'
-      }).then(() => {
-        // on confirm
-        this.clearToken()
-      }).catch(() => {
-        // on cancel
-      })
-    },
+
     init () {
       this.getBanners()
       this.getPosts()
