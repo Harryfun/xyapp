@@ -35,8 +35,8 @@
     </van-cell-group>
 
     <van-cell-group>
-      <van-cell icon="points" title="看游记" is-link />
-      <van-cell icon="gold-coin-o" title="历历在目" is-link />
+      <van-cell icon="points" title="看游记" is-link url="#/strategyList" />
+      <van-cell icon="gold-coin-o" title="历历在目" is-link url="#/calendar" />
       <van-cell icon="gift-o" title="退出登录" is-link @click="logout"/>
     </van-cell-group>
   </div>
