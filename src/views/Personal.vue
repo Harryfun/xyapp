@@ -2,7 +2,7 @@
   <div class="user">
     <header>
         <div class="left">
-            <i class="iconfont iconfanhui1" @click="$router.back(-1)"></i>
+            <i class="iconfont iconfanhui1" @click="$router.push('/')"></i>
         </div>
        <div class="userInfo">
             <div class="avatar">
@@ -11,7 +11,7 @@
         <div class="nickname">{{userInfo.nickname}}</div>
        </div>
     </header>
-    <van-row class="user-links">
+    <!-- <van-row class="user-links">
       <van-col span="6">
         <van-icon name="pending-payment" />
         待付款
@@ -28,15 +28,15 @@
         <van-icon name="logistics" />
         退款/售后
       </van-col>
-    </van-row>
+    </van-row> -->
 
     <van-cell-group class="user-group">
       <van-cell icon="records" title="全部订单" is-link @click="$router.push(name='allorder')" />
     </van-cell-group>
 
     <van-cell-group>
-      <van-cell icon="points" title="看游记" is-link url="#/strategyList" />
-      <van-cell icon="gold-coin-o" title="历历在目" is-link url="#/calendar" />
+      <van-cell icon="points" title="酒店预订" is-link url="#/hotel" />
+      <van-cell icon="gold-coin-o" title="机票预订" is-link url="#/air/search" />
       <van-cell icon="gift-o" title="退出登录" is-link @click="logout"/>
     </van-cell-group>
   </div>

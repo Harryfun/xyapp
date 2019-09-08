@@ -25,9 +25,10 @@
                   </div>
               </div>
               <div class="card-footer">
-                  <span>删除订单</span>
-                  <span>报销</span>
-                  <span>退改签</span>
+                  <!-- <span>删除订单</span> -->
+                  <span>我要报销</span>
+                  <span>联系云客服</span>
+                  <!-- <span>退改签</span> -->
               </div>
           </div>
 
@@ -55,7 +56,7 @@ export default {
     getOrders () {
       getAirOrders(this.userToken).then(res => {
         const { data } = res
-        this.orderList = data
+        this.orderList = data.reverse()
       })
     }
   },
