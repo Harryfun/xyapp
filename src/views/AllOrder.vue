@@ -5,7 +5,8 @@
           <i class="iconfont iconfanhui1" @click="$router.push({name:'personal'})"></i>
           全部订单
       </header>
-      <main>
+      <main >
+
           <div class="card" v-for="item in orderList" :key="item.id">
               <div class="card-header">
                   <span>闲云旅行旗舰店</span>
@@ -31,7 +32,6 @@
                   <!-- <span>退改签</span> -->
               </div>
           </div>
-
       </main>
   </div>
 </template>
@@ -50,13 +50,25 @@ export default {
     Loading
   },
   computed: {
-    ...mapState(['userToken'])
+    ...mapState(['userToken', 'userInfo'])
   },
   methods: {
     getOrders () {
-      getAirOrders(this.userToken).then(res => {
+      getAirOrders(this.userToken, this.userInfo).then(res => {
         const { data } = res
-        this.orderList = data.reverse()
+        this.orderList = data
+        if (this.orderList.length === 0) {
+          this.$notify({
+            message: `亲亲还没有购买过任何机票，1s后跳转机票页面`,
+            duration: 2000,
+            background: '#409eff'
+          })
+          setTimeout(() => {
+            this.$router.push({ path: '/air/search' })
+          }, 1500)
+        } else {
+          this.orderList = data.reverse()
+        }
       })
     }
   },

@@ -186,7 +186,6 @@ export default {
     // getPic () {
     //   return imgData[getRandom(0, 100)]
     // },
-    // 登出操作
 
     init () {
       this.getBanners()
@@ -196,6 +195,10 @@ export default {
   created () {
   },
   mounted () {
+    let code = location.href.slice(location.href.indexOf('code')).split('&')[0].split('=')[1]
+    if (code) {
+      this.$router.push({ name: 'login' })
+    }
     this.init()
   }
 }

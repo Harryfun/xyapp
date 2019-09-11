@@ -16,3 +16,9 @@ export const register = (data, headers) => {
 export const login = data => {
   return axios.post('accounts/login', data)
 }
+export const getGitUrl = () => {
+  return axios.get('accounts/gitUrl')
+}
+export const gitReg = (data) => {
+  return axios.post('accounts/gitReg', data)
+}

@@ -41,13 +41,9 @@
     <footer>
       <van-divider>使用第三方账号登录</van-divider>
       <div class="footer-content">
-        <div class="wb">
-          <img src="../assets/images/wb.png" alt />
-          新浪微博
-        </div>
-        <div class="qq">
-          <img src="../assets/images/qq.png" alt />
-          QQ登录
+        <div class="git" @click="toGit">
+          <img src="http://img0.imgtn.bdimg.com/it/u=3000368218,295699058&fm=26&gp=0.jpg" alt />
+          github登录
         </div>
       </div>
     </footer>
@@ -55,7 +51,7 @@
 </template>
 
 <script>
-import { getCode, register, login } from '@/api/login'
+import { getCode, register, login, getGitUrl, gitReg } from '@/api/login'
 import Loading from '@/components/Loading.vue'
 import { mapMutations } from 'vuex'
 export default {
@@ -74,7 +70,8 @@ export default {
         password: '111111',
         nickname: '松野君',
         captcha: '000000'
-      }
+      },
+      gitUrl: ''
     }
   },
   methods: {
@@ -157,9 +154,39 @@ export default {
       } else {
         ele[1].click()
       }
+    },
+    toGit () {
+      location.href = this.gitUrl
+    },
+    // 判断是否拿到code
+    getUrlCode () {
+      // console.log(location.href.slice(location.href.indexOf('code')).split('&')[0].split('=')[1])
+      let code = location.href.slice(location.href.indexOf('code')).split('&')[0].split('=')[1]
+      if (code) {
+        let data = {
+          code
+        }
+        gitReg(data).then(res => {
+          this.changeToken({ userInfo: res.data.gitUser, userToken: res.data.token })
+
+          this.$notify({
+            message: `欢迎您${res.data.gitUser.nickname},1s后将跳转首页`,
+            duration: 2000,
+            background: '#409eff'
+          })
+          setTimeout(() => {
+            location.href = 'http://192.168.0.106:8080/'
+          }, 1000)
+        })
+      }
     }
   },
-  mouted () {}
+  mounted () {
+    this.getUrlCode()
+    getGitUrl().then(res => {
+      this.gitUrl = res.data.url
+    })
+  }
 }
 </script>
 <style lang="less" scoped>
@@ -230,10 +257,10 @@ export default {
     }
     .footer-content {
       display: flex;
-      justify-content: space-between;
+      justify-content: center;
       > div {
-        width: 156px;
-        height: 78px;
+        width: 90%;
+        height: 96px;
         border: 1px solid #ccc;
         border-radius: 5px;
         font-size: 14px;
@@ -242,8 +269,8 @@ export default {
       }
       img {
         display: block;
-        width: 40px;
-        height: 40px;
+        width: 75px;
+        height: 49.5px;
         margin: 10px auto 4px;
       }
     }

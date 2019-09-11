@@ -6,7 +6,7 @@
         </div>
        <div class="userInfo">
             <div class="avatar">
-            <img :src="'http://157.122.54.189:9095'+userInfo.defaultAvatar" alt="">
+            <img :src="userInfo.defaultAvatar.indexOf('http') == -1 ? 'http://157.122.54.189:9095'+userInfo.defaultAvatar : userInfo.defaultAvatar" alt="">
         </div>
         <div class="nickname">{{userInfo.nickname}}</div>
        </div>

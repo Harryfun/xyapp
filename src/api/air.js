@@ -17,10 +17,11 @@ export const postAirOrders = (data, token) => {
     Authorization: `Bearer ${token}`
   } })
 }
-export const getAirOrders = (token) => {
-  return axios.get('/airorders', { headers: {
-    Authorization: `Bearer ${token}`
-  } })
+export const getAirOrders = (token, params) => {
+  return axios.get('/airorders/findByUser', { params,
+    headers: {
+      Authorization: `Bearer ${token}`
+    } })
 }
 // export const payOrder = (data, token) => {
 //   return axios.post('/airorders/pay', data, { headers: {

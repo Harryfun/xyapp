@@ -19,6 +19,12 @@ export default new Router({
         import(/* webpackChunkName: "about" */ './views/Login.vue')
     },
     {
+      path: '/gitPass',
+      name: 'gitPass',
+      component: () =>
+        import(/* webpackChunkName: "about" */ './views/gitPass.vue')
+    },
+    {
       path: '/strategyList',
       name: 'strategyList',
       component: () =>
