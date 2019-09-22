@@ -2,7 +2,7 @@
   <div class="allorder">
       <Loading></Loading>
       <header>
-          <i class="iconfont iconfanhui1" @click="$router.push({name:'personal'})"></i>
+          <i class="iconfont iconfanhui1" @click="$router.back()"></i>
           全部订单
       </header>
       <main >

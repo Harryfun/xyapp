@@ -51,7 +51,7 @@
         </div>
 
         <div>
-          <i class="iconfont iconicon-"></i>
+          <i class="iconfont iconicon-" @click="$router.push({name:'allorder'})"></i>
           <p>我的订单</p>
         </div>
       </footer>
